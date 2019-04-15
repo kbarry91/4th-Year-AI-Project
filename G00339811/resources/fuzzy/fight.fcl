@@ -1,0 +1,49 @@
+// Function Definition
+FUNCTION_BLOCK fight
+
+	// Inputs
+	VAR_INPUT
+		weapon : REAL; 
+		opponent : REAL; 
+	END_VAR
+	
+	// Outputs
+	VAR_OUTPUT
+		damage : REAL; 
+	END_VAR
+	
+	Define membership functions ////////////////////////////////////////////////////////////////////
+	// Sets Fuzzyify
+	FUZZIFY weapon 
+		TERM low := trian 0.0 25.0 50.0;
+		TERM average := trian 25.0 50.0 75.0;
+		TERM powerfull := trian 50.0 75.0 100.0;
+	END_FUZZIFY 
+	
+	FUZZIFY oppenent 
+		TERM weak := trian 0.0 2.5 5.0;
+		TERM average := trian 2.5 5.0 7.5;
+		TERM strong := trian 5.0 7.5 10.0;
+	END_FUZZIFY 
+	
+	// Sets - Defuzzyify
+	DEFUZZIFY damage 
+		TERM low := trian 20.0 32.0 26.0;
+		TERM mediocre := trian 24.0 28.0 32.0;
+		TERM high := trian 27.0 31.0 35.0;
+		METHOD : COG;
+		DEFAULT := 0; 
+	END_DEFUZZIFY
+	
+	// Fuzzy rules	
+	RULEBLOCK No1 
+		AND : MIN;
+		ACT : MIN;
+		ACCU : MAX;
+		RULE 1 : IF weapon IS powerfull AND opponent IS weak THEN damage IS low;
+		RULE 2 : IF weapon IS average AND opponent IS average THEN damage IS mediocre;
+		RULE 3 : IF weapon IS powerfull AND opponent IS strong THEN damage IS high;
+		RULE 4 : IF weapon IS low AND opponent IS weak THEN damage IS low;
+	END_RULEBLOCK
+	
+END_FUNCTION_BLOCK
