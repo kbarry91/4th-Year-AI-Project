@@ -2,4 +2,6 @@
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="net.sourceforge.jFuzzyLogic.FIS"/>
 <fullyQualifiedTypeName name="net.sourceforge.jFuzzyLogic.plot.JFuzzyChart"/>
+<fullyQualifiedTypeName name="ie.gmit.sw.ai.Fight"/>
+<fullyQualifiedTypeName name="ie.gmit.sw.ai.Weapon"/>
 </qualifiedTypeNameHistroy>

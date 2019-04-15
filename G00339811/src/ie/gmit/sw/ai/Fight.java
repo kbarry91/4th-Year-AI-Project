@@ -5,19 +5,24 @@ import net.sourceforge.jFuzzyLogic.plot.JFuzzyChart;
 
 public class Fight implements Fightable {
 
-	//public double getSalary(Weapon weapon, double expierence, double qualification, double screen) {
-	public double getSalary( double expierence, double qualification, double screen) {
+	// public double getSalary(Weapon weapon, double expierence, double
+	// qualification, double screen) {
+	// public double getFightDamage(Weapon weapon,Opponent opponent) {
 
-		FIS fis = FIS.load("resources/fight.fcl", true); // Load and parse the FCL
-	//	fis.setVariable("weapon", weapon);
-		fis.setVariable("expierence", expierence);
-		fis.setVariable("qualification", qualification);
-		fis.setVariable("screen", screen);
+	// TODO Make weapon and oponent objects
+	public double getFightDamage(double weaponPower, double opponentStrength) {
+
+		FIS fis = FIS.load("resources/fuzzy/fight.fcl", true); // Load and parse the FCL
+		// fis.setVariable("weapon", weapon);
+		fis.setVariable("weapon", weaponPower);
+		fis.setVariable("opponent", opponentStrength);
 		fis.evaluate(); // Execute the fuzzy inference engine
 
 		JFuzzyChart.get().chart(fis); // Display fuzzy charts
 
-		JFuzzyChart.get().chart(fis.getVariable("salary").getDefuzzifier(), "Salary", true);
-		return fis.getVariable("salary").getValue();
+		JFuzzyChart.get().chart(fis.getVariable("damage").getDefuzzifier(), "Damage", true);
+		double damageToInflict =  fis.getVariable("damage").getValue();
+		System.out.println("Fuzzy fight damage to inflict : "+ damageToInflict);
+		return damageToInflict;
 	}
 }
