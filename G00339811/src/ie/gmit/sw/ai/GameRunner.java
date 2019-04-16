@@ -6,14 +6,21 @@ import java.util.concurrent.ExecutorService;
 
 import javax.swing.*;
 
+import ie.gmit.sw.ai.nn.NnFight;
+
 public class GameRunner implements KeyListener {
-	private static final int MAZE_DIMENSION = 100;
+	private static final int MAZE_DIMENSION = 50;
 	private static final int IMAGE_COUNT = 14;
 	private ControlledSprite player;
 	private GameView view;
 	private Maze model;
 	private int currentRow;
 	private int currentCol;
+	private NnFight nnfight;
+
+	// Variables for exit
+	private int[] exitNode = new int[2];
+	private Sprite exitSprite;
 
 	public GameRunner() throws Exception {
 		model = new Maze(MAZE_DIMENSION);
@@ -23,7 +30,8 @@ public class GameRunner implements KeyListener {
 		view.setSprites(sprites);
 
 		placePlayer();
-
+		// Set the exit node.
+		placeExit();
 		Dimension d = new Dimension(GameView.DEFAULT_VIEW_SIZE, GameView.DEFAULT_VIEW_SIZE);
 		view.setPreferredSize(d);
 		view.setMinimumSize(d);
@@ -45,6 +53,16 @@ public class GameRunner implements KeyListener {
 		currentCol = (int) (MAZE_DIMENSION * Math.random());
 		model.set(currentRow, currentCol, '5'); // Player is at index 5
 		System.out.println("Player Set to to [" + currentRow + "][" + currentCol + "]");
+
+		updateView();
+	}
+
+	private void placeExit() {
+		exitNode[0] = (int) (MAZE_DIMENSION * Math.random());
+		exitNode[1] = (int) (MAZE_DIMENSION * Math.random());
+
+		model.set(exitNode[0], exitNode[1], '4'); // exit is at index 5
+		System.out.println("Exit Node Set to to [" + exitNode[0] + "][" + exitNode[1] + "]---" + exitNode);
 
 		updateView();
 	}
@@ -97,12 +115,13 @@ public class GameRunner implements KeyListener {
 	private boolean isValidMove(int row, int col) {
 		Weapon sword = new Weapon("sword", 20);
 		Weapon bomb = new Weapon("bomb", 50);
-
 		Weapon hbomb = new Weapon("hbomb", 75);
+
 		Fight fuzzyfight = new Fight();
 		Double damagToInflict = 0.0;
-
+		int reply;// variable for joptionpane choice
 		System.out.println("Model.getmazw::" + model.getMaze());
+
 		if (row <= model.size() - 1 && col <= model.size() - 1 && model.get(row, col) == ' ') {
 			model.set(currentRow, currentCol, '\u0020');
 			model.set(row, col, '5');
@@ -110,14 +129,24 @@ public class GameRunner implements KeyListener {
 			System.out.println("T Node  type is " + model.get(row, col));
 			return true;
 		} else {
+
 			System.out.println("F Node  type is " + model.get(row, col));
 			switch (model.get(row, col)) {
 			case '1':
 				System.out.println("Contact with sword ");
+				reply = JOptionPane.showConfirmDialog(null, "Would you like to collect the " + "sword?",
+						"Weapon Encountered", JOptionPane.YES_NO_OPTION);
+				if (reply == JOptionPane.YES_OPTION) {
+					System.out.println("You selected the " + sword + " weapon");
+					player.setWeaponO(sword);
+					model.set(row, col, '0');// replace object with hedge
+				} else {
+					JOptionPane.showMessageDialog(null, "Weapon not collected");
+					// System.exit(0);
+				}
 
-				// player.setWeapon("Sword");
+//				player.setWeapon("Sword");
 
-				player.setWeaponO(sword);
 				break;
 			case '3':
 				System.out.println("Contact with bomb ");
@@ -125,17 +154,34 @@ public class GameRunner implements KeyListener {
 
 				break;
 			case '4':
-				System.out.println("Contact with hydrogenbomb ");
-				player.setWeaponO(hbomb);
-
+				System.out.println("Contact with Exit ");
+				JOptionPane.showMessageDialog(null, "Hurray You escaped the spiders!!", "Game Complete",
+						JOptionPane.INFORMATION_MESSAGE);
+				//end the game.
+				System.exit(0);
 				break;
 			case '6':
 				System.out.println("Contact with Black Spider ");
-				damagToInflict = fuzzyfight.getFightDamage(player.getWeaponO().getDamage(), 90);
-				System.out.println("\n=======Fight========\n weapon:" + player.getWeaponO().getName()
-						+ "\nSpider:Black\n Damage:" + damagToInflict + "\n=======Over======== ");
-				System.out.println("Player health before :" + player.getHealth() + " after: "
-						+ (player.getHealth() - damagToInflict));
+				reply = JOptionPane.showConfirmDialog(null, "Would you like to fight the " + "black" + "spider",
+						"Spider Encountered", JOptionPane.YES_NO_OPTION);
+				if (reply == JOptionPane.YES_OPTION) {
+					damagToInflict = fuzzyfight.getFightDamage(player.getWeaponO().getDamage(), 90);
+					System.out.println("\n=======Fight========\n weapon:" + player.getWeaponO().getName()
+							+ "\nSpider:Black\n Damage:" + damagToInflict + "\n=======Over======== ");
+					System.out.println("Player health before :" + player.getHealth() + " after: "
+							+ (player.getHealth() - damagToInflict));
+					model.set(row, col, '\u0020');// replace object with empty
+				} else {
+					JOptionPane.showMessageDialog(null, "You didnt fight!");
+					// System.exit(0);
+				}
+				/*
+				 * damagToInflict = fuzzyfight.getFightDamage(player.getWeaponO().getDamage(),
+				 * 90); System.out.println("\n=======Fight========\n weapon:" +
+				 * player.getWeaponO().getName() + "\nSpider:Black\n Damage:" + damagToInflict +
+				 * "\n=======Over======== "); System.out.println("Player health before :" +
+				 * player.getHealth() + " after: " + (player.getHealth() - damagToInflict));
+				 */
 				break;
 			case '7':
 				System.out.println("Contact with Blue Spider ");
@@ -155,8 +201,33 @@ public class GameRunner implements KeyListener {
 						+ (player.getHealth() - damagToInflict));
 
 				break;
+			case ':':
+				System.out.println("Contact with Grey Spider ");
+				reply = JOptionPane.showConfirmDialog(null, "Would you like to fight the " + "grey" + "spider",
+						"Spider Encountered", JOptionPane.YES_NO_OPTION);
+				if (reply == JOptionPane.YES_OPTION) {
+					damagToInflict = fuzzyfight.getFightDamage(player.getWeaponO().getDamage(), 40);
+					fuzzyfight.getNNFightDamage(player.getHealth(), 40, player.getWeaponO().getDamage());
+					System.out.println("\n=======Fight========\n weapon:" + player.getWeaponO().getName()
+							+ "\nSpider:Grey\n Damage:" + damagToInflict + "\n=======Over======== ");
+					System.out.println("Player health before :" + player.getHealth() + " after: "
+							+ (player.getHealth() - damagToInflict));
+					model.set(row, col, '\u0020');// replace object with empty
+				} else {
+					JOptionPane.showMessageDialog(null, "You didnt fight!");
+					// System.exit(0);
+				}
+				/*
+				 * damagToInflict = fuzzyfight.getFightDamage(player.getWeaponO().getDamage(),
+				 * 90); System.out.println("\n=======Fight========\n weapon:" +
+				 * player.getWeaponO().getName() + "\nSpider:Black\n Damage:" + damagToInflict +
+				 * "\n=======Over======== "); System.out.println("Player health before :" +
+				 * player.getHealth() + " after: " + (player.getHealth() - damagToInflict));
+				 */
+				break;
 			}
-			player.setHealth(player.getHealth()-damagToInflict);
+
+			player.setHealth(player.getHealth() - damagToInflict);
 			return false; // Can't move
 		}
 	}
@@ -175,13 +246,16 @@ public class GameRunner implements KeyListener {
 				"resources/images/player/d2.png", "resources/images/player/d3.png", "resources/images/player/l1.png",
 				"resources/images/player/l2.png", "resources/images/player/l3.png", "resources/images/player/r1.png",
 				"resources/images/player/r2.png", "resources/images/player/r3.png");
-
+		exitSprite = new Sprite("Exit Node", 1, "resources/images/objects/exit.png");
 		Sprite[] sprites = new Sprite[IMAGE_COUNT];
 		sprites[0] = new Sprite("Hedge", 1, "resources/images/objects/hedge.png");
 		sprites[1] = new Sprite("Sword", 1, "resources/images/objects/sword.png");
 		sprites[2] = new Sprite("Help", 1, "resources/images/objects/help.png");
 		sprites[3] = new Sprite("Bomb", 1, "resources/images/objects/bomb.png");
-		sprites[4] = new Sprite("Hydrogen Bomb", 1, "resources/images/objects/h_bomb.png");
+		// sprites[4] = new Sprite("Hydrogen Bomb", 1,
+		// "resources/images/objects/h_bomb.png");
+		sprites[4] = exitSprite;
+
 		sprites[5] = player;
 		sprites[6] = new Sprite("Black Spider", 2, "resources/images/spiders/black_spider_1.png",
 				"resources/images/spiders/black_spider_2.png");
@@ -199,7 +273,8 @@ public class GameRunner implements KeyListener {
 				"resources/images/spiders/red_spider_2.png");
 		sprites[13] = new Sprite("Yellow Spider", 2, "resources/images/spiders/yellow_spider_1.png",
 				"resources/images/spiders/yellow_spider_2.png");
-
+		// sprites[14] = new Sprite("Exit Node", 1,
+		// "resources/images/objects/exiiy.png");
 		// Workshop
 		/**
 		 * for(Sprite s : sprites) { pool.execute(s); }

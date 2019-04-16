@@ -12,7 +12,7 @@ FUNCTION_BLOCK fight
 		damage : REAL; 
 	END_VAR
 	
-	//Define membership functions ////////////////////////////////////////////////////////////////////
+	// Define membership functions ////////////////////////////////////////////////////////////////////
 	// Sets Fuzzyify
 	// weapon strength value 0-100
 	FUZZIFY weapon 
@@ -47,6 +47,9 @@ FUNCTION_BLOCK fight
 		RULE 2 : IF weapon IS average AND opponent IS average THEN damage IS mediocre;
 		RULE 3 : IF weapon IS powerfull AND opponent IS strong THEN damage IS high;
 		RULE 4 : IF weapon IS low AND opponent IS weak THEN damage IS low;
+		RULE 5 : IF weapon IS low and opponent is strong THEN damage is low;
+		RULE 6 : IF weapon IS average and opponent is strong THEN damage is mediocre;
+
 	END_RULEBLOCK
 	
 END_FUNCTION_BLOCK

@@ -12,7 +12,7 @@ public class Maze {
 		addFeature('\u0031', '0', featureNumber); //1 is a sword, 0 is a hedge
 		addFeature('\u0032', '0', featureNumber); //2 is help, 0 is a hedge
 		addFeature('\u0033', '0', featureNumber); //3 is a bomb, 0 is a hedge
-		addFeature('\u0034', '0', featureNumber); //4 is a hydrogen bomb, 0 is a hedge
+		//addFeature('\u0034', '0', featureNumber); //4 is a hydrogen bomb, 0 is a hedge
 		
 		featureNumber = (int)((dimension * dimension) * 0.001); //Change this value to control the number of spiders
 		addFeature('\u0036', '0', featureNumber); //6 is a Black Spider, 0 is a hedge
@@ -35,7 +35,7 @@ public class Maze {
 	
 	private void addFeature(char feature, char replace, int number){
 		int counter = 0;
-		while (counter < feature){ //Keep looping until feature number of items have been added
+		while (counter < number){ //Keep looping until feature number of items have been added
 			int row = (int) (maze.length * Math.random());
 			int col = (int) (maze[0].length * Math.random());
 			

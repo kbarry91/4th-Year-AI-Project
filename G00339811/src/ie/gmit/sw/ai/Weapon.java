@@ -6,7 +6,7 @@ public class Weapon {
 
 	public Weapon() {
 		setName("Hands");
-		setDamage(5);
+		setDamage(10);
 	}
 
 	public Weapon(String name, double damage) {
