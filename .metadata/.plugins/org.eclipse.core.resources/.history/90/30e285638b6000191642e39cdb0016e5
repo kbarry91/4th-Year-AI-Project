@@ -23,8 +23,6 @@ public class Maze {
 		addFeature('\u003B', '0', featureNumber); //; is a Orange Spider, 0 is a hedge
 		addFeature('\u003C', '0', featureNumber); //< is a Red Spider, 0 is a hedge
 		addFeature('\u003D', '0', featureNumber); //= is a Yellow Spider, 0 is a hedge
-		addFeature('\u003E', '0', featureNumber); //> is a Health Spider, 0 is a hedge
-
 	}
 	
 	private void init(){

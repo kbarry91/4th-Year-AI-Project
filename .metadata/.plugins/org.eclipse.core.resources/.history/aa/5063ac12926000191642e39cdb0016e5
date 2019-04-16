@@ -226,16 +226,6 @@ public class GameRunner implements KeyListener {
 				 * player.getHealth() + " after: " + (player.getHealth() - damagToInflict));
 				 */
 				break;
-			case '>':
-				// health pickup
-				if (player.getHealth() < 60) {
-					player.setHealth(player.getHealth() + 40);
-				} else {
-					player.setHealth(100);
-				}
-				JOptionPane.showMessageDialog(null, "Health restored to : " + player.getHealth(), "Health Pick up",
-						JOptionPane.INFORMATION_MESSAGE);
-				break;
 			}
 
 			player.setHealth(player.getHealth() - damagToInflict);
@@ -286,7 +276,7 @@ public class GameRunner implements KeyListener {
 				"resources/images/spiders/red_spider_2.png");
 		sprites[13] = new Sprite("Yellow Spider", 2, "resources/images/spiders/yellow_spider_1.png",
 				"resources/images/spiders/yellow_spider_2.png");
-		sprites[14] = healthSprite;// Health Object.
+		sprites[14] = healthSprite;
 		// sprites[14] = new Sprite("Exit Node", 1,
 		// "resources/images/objects/exiiy.png");
 		// Workshop

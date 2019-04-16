@@ -227,13 +227,13 @@ public class GameRunner implements KeyListener {
 				 */
 				break;
 			case '>':
-				// health pickup
-				if (player.getHealth() < 60) {
-					player.setHealth(player.getHealth() + 40);
-				} else {
+				//health pickup
+				if (player.getHealth()<60) {
+					player.setHealth(player.getHealth()+40);
+				}else {
 					player.setHealth(100);
 				}
-				JOptionPane.showMessageDialog(null, "Health restored to : " + player.getHealth(), "Health Pick up",
+				JOptionPane.showMessageDialog(null, "Health restored to : "+player.getHealth(), "Health Pick up",
 						JOptionPane.INFORMATION_MESSAGE);
 				break;
 			}

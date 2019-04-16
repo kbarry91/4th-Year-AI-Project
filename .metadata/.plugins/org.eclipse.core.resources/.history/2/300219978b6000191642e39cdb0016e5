@@ -10,7 +10,7 @@ import ie.gmit.sw.ai.nn.NnFight;
 
 public class GameRunner implements KeyListener {
 	private static final int MAZE_DIMENSION = 50;
-	private static final int IMAGE_COUNT = 15;
+	private static final int IMAGE_COUNT = 14;
 	private ControlledSprite player;
 	private GameView view;
 	private Maze model;
@@ -21,7 +21,6 @@ public class GameRunner implements KeyListener {
 	// Variables for exit
 	private int[] exitNode = new int[2];
 	private Sprite exitSprite;
-	private Sprite healthSprite;
 
 	public GameRunner() throws Exception {
 		model = new Maze(MAZE_DIMENSION);
@@ -158,7 +157,7 @@ public class GameRunner implements KeyListener {
 				System.out.println("Contact with Exit ");
 				JOptionPane.showMessageDialog(null, "Hurray You escaped the spiders!!", "Game Complete",
 						JOptionPane.INFORMATION_MESSAGE);
-				// end the game.
+				//end the game.
 				System.exit(0);
 				break;
 			case '6':
@@ -226,16 +225,6 @@ public class GameRunner implements KeyListener {
 				 * player.getHealth() + " after: " + (player.getHealth() - damagToInflict));
 				 */
 				break;
-			case '>':
-				// health pickup
-				if (player.getHealth() < 60) {
-					player.setHealth(player.getHealth() + 40);
-				} else {
-					player.setHealth(100);
-				}
-				JOptionPane.showMessageDialog(null, "Health restored to : " + player.getHealth(), "Health Pick up",
-						JOptionPane.INFORMATION_MESSAGE);
-				break;
 			}
 
 			player.setHealth(player.getHealth() - damagToInflict);
@@ -258,8 +247,6 @@ public class GameRunner implements KeyListener {
 				"resources/images/player/l2.png", "resources/images/player/l3.png", "resources/images/player/r1.png",
 				"resources/images/player/r2.png", "resources/images/player/r3.png");
 		exitSprite = new Sprite("Exit Node", 1, "resources/images/objects/exit.png");
-		healthSprite = new Sprite("Health", 1, "resources/images/objects/health.png");
-
 		Sprite[] sprites = new Sprite[IMAGE_COUNT];
 		sprites[0] = new Sprite("Hedge", 1, "resources/images/objects/hedge.png");
 		sprites[1] = new Sprite("Sword", 1, "resources/images/objects/sword.png");
@@ -286,7 +273,6 @@ public class GameRunner implements KeyListener {
 				"resources/images/spiders/red_spider_2.png");
 		sprites[13] = new Sprite("Yellow Spider", 2, "resources/images/spiders/yellow_spider_1.png",
 				"resources/images/spiders/yellow_spider_2.png");
-		sprites[14] = healthSprite;// Health Object.
 		// sprites[14] = new Sprite("Exit Node", 1,
 		// "resources/images/objects/exiiy.png");
 		// Workshop

@@ -17,6 +17,5 @@ INDEX VERSION 1.131+C:\Users\kevo-\College4\artifical-intelligense\.metadata\.pl
 1110334383.index
 3173990942.index
 866495595.index
-2202543503.index
 1394848873.index
 2994552673.index
