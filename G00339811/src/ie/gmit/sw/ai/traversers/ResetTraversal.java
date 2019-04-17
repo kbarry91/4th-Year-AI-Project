@@ -1,0 +1,48 @@
+package ie.gmit.sw.ai.traversers;
+
+import java.awt.Color;
+import ie.gmit.sw.ai.*;
+
+public class ResetTraversal {
+
+	// Sets all the nodes to unvisited to the algorithm can be re-run.
+	public void resetA(Node[][] maze) {
+		for (int i = 0; i < maze.length; i++) {
+			for (int j = 0; j < maze[i].length; j++) {
+		//for (int i = 0; i < 50; i++) {
+			//for (int j = 0; j < 50; j++) {
+				System.out.println("[DEBUG] maze ij: "+maze[i][j]);
+				maze[i][j].setVisited(false);
+				maze[i][j].setParent(null);
+				if (maze[i][j].getNodeType() == 'T' || maze[i][j].getNodeType() == ' ') {
+					maze[i][j].setNodeType(' ');
+					maze[i][j].setColor(Color.LIGHT_GRAY);
+				}
+			}
+		}
+	}
+
+	// Sets all the nodes to unvisited to the algorithm can be re-run.
+	public void resetB(Node[][] maze) {
+		for (int i = 0; i < maze.length; i++) {
+			for (int j = 0; j < maze[i].length; j++) {
+				maze[i][j].setVisited(false);
+				maze[i][j].setParent(null);
+			}
+		}
+	}
+
+	/**
+	 * Puts the thread to sleep for x amount of seconds
+	 * 
+	 * @param seconds Amount of seconds to suspend the thread
+	 */
+	public void sleep(int seconds) {
+		try {
+			Thread.sleep(seconds * 1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+}

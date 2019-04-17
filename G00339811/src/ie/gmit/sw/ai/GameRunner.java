@@ -7,6 +7,9 @@ import java.util.concurrent.ExecutorService;
 import javax.swing.*;
 
 import ie.gmit.sw.ai.nn.NnFight;
+import ie.gmit.sw.ai.traversers.AStarTraversator;
+import ie.gmit.sw.ai.traversers.Node;
+import ie.gmit.sw.ai.traversers.Traversator;
 
 public class GameRunner implements KeyListener {
 	private static final int MAZE_DIMENSION = 50;
@@ -18,9 +21,13 @@ public class GameRunner implements KeyListener {
 	private int currentCol;
 	private NnFight nnfight;
 
-	// Variables for exit
+	// Variables for exit stores position
 	private int[] exitNode = new int[2];
+	private Node goalNode;
 	private Sprite exitSprite;
+
+	// Variable for playerNode;
+	private Node playerNode;
 	private Sprite healthSprite;
 
 	public GameRunner() throws Exception {
@@ -62,9 +69,11 @@ public class GameRunner implements KeyListener {
 		exitNode[0] = (int) (MAZE_DIMENSION * Math.random());
 		exitNode[1] = (int) (MAZE_DIMENSION * Math.random());
 
+		// Set exit values as a goalNode of Node type so ity can be used in a search
+		goalNode = new Node(exitNode[0], exitNode[1]);
+
 		model.set(exitNode[0], exitNode[1], '4'); // exit is at index 5
 		System.out.println("Exit Node Set to to [" + exitNode[0] + "][" + exitNode[1] + "]---" + exitNode);
-
 		updateView();
 	}
 
@@ -98,13 +107,27 @@ public class GameRunner implements KeyListener {
 			view.toggleZoom();
 		} else if (e.getKeyCode() == KeyEvent.VK_S) {
 			// - Display Player Stats in a popup.
-			JOptionPane.showMessageDialog(null,
-					"Player Stats:\n Health :" + player.getHealth() + "\n Weapon: " + player.getWeaponO().getName());
+			JOptionPane.showMessageDialog(null, "Player Stats:\n Health :" + player.getHealth() + "\n Weapon: "
+					+ player.getWeaponO().getName() + "\n Path to goal activated: " + player.isHelpIsActive());
+		} else if (e.getKeyCode() == KeyEvent.VK_H) {
+			// 'H' Key selected to generate path to goal
+			if (!player.isHelpIsActive()) {
+				JOptionPane.showMessageDialog(null, "Path Help not activated collect a Help Pickup First!",
+						"View Path To goal", JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(null, "Path Help  activated ", "View Path To goal",
+						JOptionPane.INFORMATION_MESSAGE);
+				Traversator traverse = algorithm(0); // Try to make it do A*.
+				playerNode = new Node(currentRow, currentCol);
+				traverse.traverse(model.getMazeNode(), playerNode);
+			}
 		} else {
 			return;
 		}
-
+		System.out.println("Above update view");
 		updateView();
+		System.out.println("UNder update view");
+
 	}
 
 	public void keyReleased(KeyEvent e) {
@@ -149,6 +172,22 @@ public class GameRunner implements KeyListener {
 //				player.setWeapon("Sword");
 
 				break;
+			case '2':
+				// player comes in contact with help symbol
+
+				System.out.println("Contact with help ");
+				reply = JOptionPane.showConfirmDialog(null, "Would you like to collect generate path to goal?",
+						"Help Encountered", JOptionPane.YES_NO_OPTION);
+				if (reply == JOptionPane.YES_OPTION) {
+
+					model.set(row, col, '0');// replace object with hedge
+					player.setHelpIsActive(true);
+					JOptionPane.showMessageDialog(null,
+							"Help is activated, Press 'H' in map view to view best root to goal node");
+				} else {
+					JOptionPane.showMessageDialog(null, "Help not activated");
+					// System.exit(0);
+				}
 			case '3':
 				System.out.println("Contact with bomb ");
 				player.setWeaponO(bomb);
@@ -294,6 +333,24 @@ public class GameRunner implements KeyListener {
 		 * for(Sprite s : sprites) { pool.execute(s); }
 		 */
 		return sprites;
+	}
+
+	private Traversator algorithm(int randNum) {
+		// Selecting a random algorithm to be created and returned
+		/*
+		 * switch (randNum) { case 0: return new
+		 * AStarTraversator(game.getModel().getGoalNode(), false); case 1: return new
+		 * BeamTraversator(game.getModel().getGoalNode(), 10); case 2: // return new
+		 * SimulatedAnnealingTraversator(game.getModel().getGoalNode()); case 3: return
+		 * new BestFirstTraversator(game.getModel().getGoalNode()); case 4: return new
+		 * BasicHillClimbingTraversator(game.getModel().getGoalNode()); case 5: //return
+		 * new DepthLimitedDFSTraversator(game.getMaze().length); return new
+		 * DepthLimitedDFSTraversator(5); // Only works sometimes. case 6: //return new
+		 * IDAStarTraversator(game.getModel().getGoalNode()); case 7: //return new
+		 * IDDFSTraversator(); default: return new
+		 * AStarTraversator(game.getModel().getGoalNode(), false); }
+		 */
+		return new AStarTraversator(goalNode, false);
 	}
 
 	public static void main(String[] args) throws Exception {

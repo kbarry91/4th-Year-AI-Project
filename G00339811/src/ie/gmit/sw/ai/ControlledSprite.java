@@ -7,11 +7,13 @@ public class ControlledSprite extends Sprite {
 	public String weapon;
 	public double health;
 	public Weapon weaponO;
-
+	private boolean helpIsActive;// boolean to check if help has been activated
+	
 	public ControlledSprite(String name, int frames, String... images) throws Exception {
 		super(name, frames, images);
 		this.setHealth(100);
 		this.weaponO = new Weapon(); 
+		this.helpIsActive = false;
 	}
 
 	public Weapon getWeaponO() {
@@ -20,6 +22,14 @@ public class ControlledSprite extends Sprite {
 
 	public void setWeaponO(Weapon weaponO) {
 		this.weaponO = weaponO;
+	}
+
+	public boolean isHelpIsActive() {
+		return helpIsActive;
+	}
+
+	public void setHelpIsActive(boolean helpIsActive) {
+		this.helpIsActive = helpIsActive;
 	}
 
 	public double getHealth() {
