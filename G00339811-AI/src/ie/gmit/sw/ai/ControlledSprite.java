@@ -1,12 +1,12 @@
 package ie.gmit.sw.ai;
 /**
- * 
+ * Represents a user Controlled Object.
+ *  
  * @author Kevin Barry - Bachelor of Science (Honours) in Software Development
  *
  */
 public class ControlledSprite extends Sprite{
 	private double playerHealth;
-	private boolean isAlive;
 
 	public ControlledSprite(int anger, String name, int frames, double playerHealth, String... images) throws Exception {
 		super(anger, name, frames, images);
@@ -50,7 +50,5 @@ public class ControlledSprite extends Sprite{
 			return false;
 	}
 
-	public void setAlive(boolean isAlive) {
-		this.isAlive = isAlive;
-	}
+	
 }

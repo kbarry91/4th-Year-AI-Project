@@ -1,6 +1,7 @@
 package ie.gmit.sw.ai;
+
 /**
- *  * @author Kevin Barry - Bachelor of Science (Honours) in Software Development
+ * @author Kevin Barry - Bachelor of Science (Honours) in Software Development
  *
  */
 public enum Direction {
