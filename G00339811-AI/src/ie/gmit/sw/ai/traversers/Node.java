@@ -1,9 +1,15 @@
 package ie.gmit.sw.ai.traversers;
 
 import java.awt.Color;
+/**
+ * Node is a class to represent a node implementation of and object and can be used to traverse a path in the maze.
+ * 
+ * @author Kevin Barry - Bachelor of Science (Honours) in Software Development
+ *
+ */
 public class Node {
 	public enum Direction {North, South, East, West};
-	private Node parent;
+	private Node parentNode;
 	private Color color = Color.BLACK;
 	private Direction[] paths = null;
 	public boolean visited =  false;
@@ -12,18 +18,13 @@ public class Node {
 	private int col = -1;
 	private int distance;
 	private int type;
-	
-//	public Node(int row, int col) {
-//		this.row = row;
-//		this.col = col;
-//	}
-	
+
 	/**
-	 * put in extra type
+	 * Constructor for a Node object
 	 * 
-	 * @param row
-	 * @param col
-	 * @param type
+	 * @param row the row location of node.
+	 * @param col the column location of the node.
+	 * @param type the type of node.
 	 */
 	public Node(int row, int col, int type) {
 		this.row = row;
@@ -31,31 +32,66 @@ public class Node {
 		this.type = type;
 	}
 
+	/**
+	 * Get the row.
+	 * 
+	 * @return row value for node.
+	 */
 	public int getRow() {
 		return row;
 	}
-
+	
+	/**
+	 * Get the column.
+	 * 
+	 * @return column value for node.
+	 */
 	public int getCol() {
 		return col;
 	}
 
+	/**
+	 * Get the parent node.
+	 * 
+	 * @return the parent of the current node.
+	 */
 	public Node getParent() {
-		return parent;
+		return parentNode;
 	}
-
+	
+	/**
+	 * 
+	 * Set the parent node.
+	 * 
+	 * @param parent the node to set as parent.
+	 */
 	public void setParent(Node parent) {
-		this.parent = parent;
+		this.parentNode = parent;
 	}
 
+	/**
+	 * Get the colour of the node.
+	 * 
+	 * @return the node colour.
+	 */
 	public Color getColor() {
 		return color;
 	}
 
+	/**
+	 * Set the colour for the node.
+	 * 
+	 * @param color the node colour.
+	 */
 	public void setColor(Color color) {
 		this.color = color;
 	}
 	
-	//setters and getters for type
+	/**
+	 * Get the node type.
+	 * 
+	 * @return the type of node.
+	 */
 	public int getType() {
 		return type;
 	}
@@ -72,6 +108,13 @@ public class Node {
 		this.col = col;
 	}
 
+	/**
+	 * Checks if the node has a direction.
+	 * 
+	 * @param directionthe direction to check
+	 * 
+	 * @return true or false.
+	 */
 	public boolean hasDirection(Direction direction){	
 		for (int i = 0; i < paths.length; i++) {
 			if (paths[i] == direction) return true;
@@ -79,6 +122,13 @@ public class Node {
 		return false;
 	}
 	
+	/**
+	 * Retrieves the children of the node
+	 * 
+	 * @param maze the maze object.
+	 * 
+	 * @return an array of children Nodes.
+	 */
 	public Node[] children(Node[][] maze){		
 		java.util.List<Node> children = new java.util.ArrayList<Node>();
 				
@@ -90,6 +140,13 @@ public class Node {
 		return (Node[]) children.toArray(new Node[children.size()]);
 	}
 
+	/**
+	 * Retrieves the adjacent nodes of the node
+	 * 
+	 * @param maze the maze object.
+	 * 
+	 * @return an array of adjacent Nodes.
+	 */
 	public Node[] adjacentNodes(Node[][] maze){
 		java.util.List<Node> adjacents = new java.util.ArrayList<Node>();
 		
@@ -105,6 +162,11 @@ public class Node {
 		return paths;
 	}
 
+	/**
+	 * Adds a direction to the path.
+	 * 
+	 * @param direction.
+	 */
 	public void addPath(Direction direction) {
 		int index = 0;
 		if (paths == null){
@@ -119,10 +181,16 @@ public class Node {
 		paths[index] = direction;
 	}
 
+	
 	public boolean isVisited() {
 		return visited;
 	}
 
+	/**
+	 * Set the node as visited and its colour to blue.
+	 * 
+	 * @param visited
+	 */
 	public void setVisited(boolean visited) {
 		this.color = Color.BLUE;
 		this.visited = visited;
@@ -136,6 +204,12 @@ public class Node {
 		this.goal = goal;
 	}
 	
+	/**
+	 * Calculates the heuristic value.
+	 * 
+	 * @param goal, the goal to check
+	 * @return the heuristic value.
+	 */
 	public int getHeuristic(Node goal){
 		double x1 = this.col;
 		double y1 = this.row;
@@ -151,7 +225,10 @@ public class Node {
 	public void setPathCost(int distance) {
 		this.distance = distance;
 	}
-
+	
+	/**
+	 * Returns a string representation of the node.
+	 */
 	public String toString() {
 		return "[" + row + "/" + col + "]";
 	}
