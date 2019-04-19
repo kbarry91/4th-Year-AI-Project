@@ -89,7 +89,7 @@ public class GameRunner implements KeyListener {
 	private void updateView() {
 
 		// Set the p-layer object in the maze.
-		view.setPlayer(gameMaze.getPlayer());
+		//view.setPlayer(gameMaze.getPlayer());
 		currentRow = gameMaze.getPlayer().getRow();
 		currentCol = gameMaze.getPlayer().getCol();
 

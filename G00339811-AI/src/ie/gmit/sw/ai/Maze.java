@@ -32,7 +32,7 @@ public class Maze {
 
 	// Initialise the NeuralNetworkFight class.
 	private NeuralNetworkFight nnFighter;
-private Node nextPosition;
+	
 	/**
 	 * Constructor to create the maze object. The NeuralNetworkFight is taken in as
 	 * a parameter as it was ttrained at the start of the program.
@@ -77,7 +77,8 @@ private Node nextPosition;
 		addFeature(13, -1, featureNumber); // = is a Yellow Spider,-1 is a blank background.
 		addFeature(15, 0, 1);// 15 is a exit object
 
-		
+		// Instantiate the player.
+		//player(5, -1);
 	}
 
 	/**
