@@ -7,143 +7,164 @@ import ie.gmit.sw.ai.fuzzy.Fightable;
 import ie.gmit.sw.ai.nn.NeuralNetworkFight;
 import ie.gmit.sw.ai.traversers.Node;
 
+/**
+ * Maze is the game object that defines and populates the game map
+ * 
+ * @author Kevin Barry - Bachelor of Science (Honours) in Software Development
+ *
+ */
 public class Maze {
-	// first changed to node array
-	private Node[][] maze; // An array does not lend itself to the type of mazge generation alogs we use in
-							// the labs. There are no "walls" to carve...
-	// Lock object uysed to run the while loop in runnable.
+	// A 2-dimensional Node array that represents the game maze.
+	private Node[][] maze;
+
+	// Lock object used to run the while loop in runnable.
 	private Object lock = new Object();
+
+	// The goal node.
 	public Node goalNode;
 
+	// Creates a thread pool that creates new threads as needed.
+	// Assign Thread pool to Executor service used to track tasks.
 	private ExecutorService executor = Executors.newCachedThreadPool();
+
 	// Player object.
-	private player p;
+	private player player;
 
-	// Initilizing the neural network class here
-	// train the NN
-	// we dont train the nn each time the spider is running
-	private NeuralNetworkFight f;
+	// Initialise the NeuralNetworkFight class.
+	private NeuralNetworkFight nnFighter;
 
+	/**
+	 * Constructor to create the maze object. The NeuralNetworkFight is taken in as
+	 * a parameter as it was ttrained at the start of the program.
+	 * 
+	 * @param dimension the size of the maze.
+	 * @param           nfight, pass in the trained Neural Network.
+	 */
 	public Maze(int dimension, NeuralNetworkFight nfight) {
 
-		// Initilizing
-		this.f = nfight;
+		this.nnFighter = nfight;
 
-		// second
+		// Set the size of the maze.
 		maze = new Node[dimension][dimension];
+
+		// Initialise a blank maze.
 		init();
 		buildMaze();
 
-		// sets it to 1 percent of maze
-		int featureNumber = (int) ((dimension * dimension) * 0.01); // Change this value to control the number of
-																	// objects
-//		addFeature('\u0031', '0', featureNumber); //1 is a sword, 0 is a hedge
-//		addFeature('\u0032', '0', featureNumber); //2 is help, 0 is a hedge
-//		addFeature('\u0033', '0', featureNumber); //3 is a bomb, 0 is a hedge
-//		addFeature('\u0034', '0', featureNumber); //4 is a hydrogen bomb, 0 is a hedge
-
-		// made into int rather than chars
+		// Set the amount of pick up objects to be added.
+		// 0.01 sets it to 1 percent of maze.
+		int featureNumber = (int) ((dimension * dimension) * 0.01);
 		addFeature(1, 0, featureNumber); // 1 is a sword, 0 is a hedge
 		addFeature(2, 0, featureNumber); // 2 is help, 0 is a hedge
 		addFeature(3, 0, featureNumber); // 3 is a bomb, 0 is a hedge
 		addFeature(4, 0, featureNumber); // 4 is a hydrogen bomb, 0 is a hedge
-		addFeature(14, 0, featureNumber); // 4 is a health pickup , 0 is a hedge
+		addFeature(14, 0, featureNumber);// 14 is a health pickup , 0 is a hedge
 
-		featureNumber = (int) ((dimension * dimension) * 0.001); // Change this value to control the number of spiders
-//		addFeature('\u0036', '0', featureNumber); //6 is a Black Spider, 0 is a hedge
-//		addFeature('\u0037', '0', featureNumber); //7 is a Blue Spider, 0 is a hedge
-//		addFeature('\u0038', '0', featureNumber); //8 is a Brown Spider, 0 is a hedge
-//		addFeature('\u0039', '0', featureNumber); //9 is a Green Spider, 0 is a hedge
-//		addFeature('\u003A', '0', featureNumber); //: is a Grey Spider, 0 is a hedge
-//		addFeature('\u003B', '0', featureNumber); //; is a Orange Spider, 0 is a hedge
-//		addFeature('\u003C', '0', featureNumber); //< is a Red Spider, 0 is a hedge
-//		addFeature('\u003D', '0', featureNumber); //= is a Yellow Spider, 0 is a hedge
-
-		// player was inistiated in game runnner biut changed t here
-		player(5, -1);
-
-		// spiders
-		addFeature(6, -1, featureNumber); // 6 is a Black Spider, 0 is a hedge
-		addFeature(7, -1, featureNumber); // 7 is a Blue Spider, 0 is a hedge
-		addFeature(8, -1, featureNumber); // 8 is a Brown Spider, 0 is a hedge
-		addFeature(9, -1, featureNumber); // 9 is a Green Spider, 0 is a hedge
-		addFeature(10, -1, featureNumber); // : is a Grey Spider, 0 is a hedge
-		addFeature(11, -1, featureNumber); // ; is a Orange Spider, 0 is a hedge
-		addFeature(12, -1, featureNumber); // < is a Red Spider, 0 is a hedge
-		addFeature(13, -1, featureNumber); // = is a Yellow Spider, 0 is a hedge
+		// Set the amount of enemy objects to be added.
+		// 0.001 sets it to .1 percent of maze.
+		featureNumber = (int) ((dimension * dimension) * 0.001);
+		addFeature(6, -1, featureNumber); // 6 is a Black Spider, -1 is a blank background.
+		addFeature(7, -1, featureNumber); // 7 is a Blue Spider, -1 is a blank background.
+		addFeature(8, -1, featureNumber); // 8 is a Brown Spider, -1 is a blank background.
+		addFeature(9, -1, featureNumber); // 9 is a Green Spider, -1 is a blank background.
+		addFeature(10, -1, featureNumber); // : is a Grey Spider, -1 is a blank background.
+		addFeature(11, -1, featureNumber); // ; is a Orange Spider,-1 is a blank background.
+		addFeature(12, -1, featureNumber); // < is a Red Spider, -1 is a blank background.
+		addFeature(13, -1, featureNumber); // = is a Yellow Spider,-1 is a blank background.
 		addFeature(15, 0, 1);// 15 is a exit object
+
+		// Instantiate the player.
+		player(5, -1);
 	}
 
+	/**
+	 * Initialise the maze with Blank nodes.
+	 */
 	private void init() {
+
 		for (int row = 0; row < maze.length; row++) {
+
 			for (int col = 0; col < maze[row].length; col++) {
-				// maze[row][col] = '0'; //Index 0 is a hedge...
-				// here at the start of the game we are going to init the whole
-				// maze with a value of 0
 				maze[row][col] = new Node(row, col, 0);
 			}
 		}
 	}
 
-	// changed add feature so now it takes and int
+	/**
+	 * Adds the specified features to the maze.
+	 * 
+	 * @param feature, the feature (game object) to add.
+	 * @param replace, the valuer to replace.
+	 * @param number, the number of features to add.
+	 */
 	private void addFeature(int feature, int replace, int number) {
 
 		int counter = 0;
-		// this will draw the amount of spiders and hedges
-		while (counter < number) { // Keep looping until feature number of items have been added
+
+		// Loop through adding features until the number of features specified has been
+		// added.
+		while (counter < number) {
 			int row = (int) (maze.length * Math.random());
 			int col = (int) (maze[0].length * Math.random());
-			//
+
+			// Check if the node type is set to replace.
 			if (maze[row][col].getType() == replace) {
-				// send spiders to threadpool class and the player aswell (Running on seperate
-				// threwads)
+
+				// Pass the objects to the class containing the Thread pool to run on separate
+				// threads.
 				if (feature > 5 && feature < 14) {
-					Fightable f = new Fightable(row, col, feature, lock, maze, p, this.f);
+					Fightable fighter = new Fightable(row, col, feature, lock, maze, player, this.nnFighter);
 
-					// execute the thread pool
-					executor.execute(f);
+					// Execute the thread pool with the fightable.
+					executor.execute(fighter);
 				}
 
-				// change its type to whatever the name of the spider is
+				// Set node type to type of object.
 				maze[row][col].setType(feature);
-				/*
-				if (feature == 15) {
-					//goalNode = maze[row][col];
-					setGoalNode(maze[row][col]);
-					maze[row][col].setGoalNode(true);
-				}
-				*/
 				counter++;
 			}
 		}
 	}
 
-	public Node getGoalNode() {
-		return goalNode;
-	}
-
-	public void setGoalNode(Node goalNode) {
-		this.goalNode = goalNode;
-	}
-
+	/**
+	 * Builds the maze.
+	 */
 	private void buildMaze() {
+
 		for (int row = 1; row < maze.length - 1; row++) {
 			for (int col = 1; col < maze[row].length - 1; col++) {
 				int num = (int) (Math.random() * 10);
+
 				if (isRoom(row, col))
 					continue;
-				if (num > 5 && col + 1 < maze[row].length - 1) {
-					// maze[row][col + 1] = '\u0020'; //\u0020 = 0x20 = 32 (base 10) = SPACE
 
-					// space part of maze is now srt to type of -21
+				if (num > 5 && col + 1 < maze[row].length - 1) {
+					// Set The blank paths in the maze.
 					maze[row][col + 1].setType(-1);
 				} else {
-//					if (row + 1 < maze.length - 1) maze[row + 1][col] = '\u0020';
 					if (row + 1 < maze.length - 1)
 						maze[row + 1][col].setType(-1);
 				}
 			}
 		}
+	}
+
+	/**
+	 * Get the goal node.
+	 * 
+	 * @return Node the goal node.
+	 */
+	public Node getGoalNode() {
+		return goalNode;
+	}
+
+	/**
+	 * Set the goalNode.
+	 * 
+	 * @param goalNode the node to set.
+	 */
+	public void setGoalNode(Node goalNode) {
+		this.goalNode = goalNode;
 	}
 
 	/**
@@ -165,36 +186,38 @@ public class Maze {
 			if (maze[row][col].getType() == replace) {
 
 				// if row and col value are empty the n place the player
-				p = new player(row, col, feature, maze);
-				maze[row][col] = p;
+				player = new player(row, col, feature, maze);
+				maze[row][col] = player;
 				placed = true;
 			}
 		}
 	}
 
 	/**
-	 *
-	 * @param row
-	 * @param col
+	 * Check the location on maze to try reduce the number of rooms.
+	 * 
+	 * @param row , the row index.
+	 * @param col , the column index.
 	 * @return
 	 */
-	private boolean isRoom(int row, int col) { // Flaky and only works half the time, but reduces the number of rooms
-//		return row > 1 && maze[row - 1][col] == '\u0020' && maze[row - 1][col + 1] == '\u0020';
+	private boolean isRoom(int row, int col) {
 		return row > 1 && maze[row - 1][col].getType() == -1 && maze[row - 1][col + 1].getType() == -1;
 	}
 
 	/**
+	 * Get the maze.
 	 * 
-	 * @return
+	 * @return a 2-dim node array representing the maze.
 	 */
 	public Node[][] getMaze() {
 		return this.maze;
 	}
 
 	/**
+	 * Retrieve a specific node.
 	 * 
-	 * @param row
-	 * @param col
+	 * @param row , the row index.
+	 * @param col , the column index.
 	 * @return
 	 */
 	public Node get(int row, int col) {
@@ -202,10 +225,11 @@ public class Maze {
 	}
 
 	/**
+	 * Set a node at the specified index.
 	 * 
-	 * @param row
-	 * @param col
-	 * @param node
+	 * @param row , the row index.
+	 * @param col , the column index.
+	 * @param     node, the node to put on index.
 	 */
 	public void set(int row, int col, Node node) {
 		node.setCol(col);
@@ -214,20 +238,59 @@ public class Maze {
 		this.maze[row][col] = node;
 	}
 
+	/**
+	 * Get the size of the maze.
+	 * 
+	 * @return the length of the maze.
+	 */
 	public int size() {
 		return this.maze.length;
 	}
 
-	public player getP() {
-		return this.p;
+	/**
+	 * Get the player object.
+	 * 
+	 * @return the player object.
+	 */
+	public player getPlayer() {
+		return this.player;
 	}
 
-	public void setP(int row, int col) {
-		this.maze[row][col] = this.p;
-		this.p.setRow(row);
-		this.p.setCol(col);
+	/**
+	 * Set the player on the maze.
+	 * 
+	 * @param row , the row index.
+	 * @param col , the column index.
+	 */
+	public void setPlayer(int row, int col) {
+		this.maze[row][col] = this.player;
+		this.player.setRow(row);
+		this.player.setCol(col);
 	}
 
+	/**
+	 * Set the node as type 0 to change it back to a hedge.
+	 * 
+	 * @param row , the row index.
+	 * @param col , the column index.
+	 */
+	public void clearNode(int row, int col) {
+		get(row, col).setType(0);
+	}
+
+	/**
+	 * Set the node as type -1 to change it back to a blank.
+	 * 
+	 * @param row , the row index.
+	 * @param col , the column index.
+	 */
+	public void clearSpiderNode(int row, int col) {
+		get(row, col).setType(-1);
+	}
+
+	/**
+	 * Return a string representation of the maze.
+	 */
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		for (int row = 0; row < maze.length; row++) {
@@ -239,18 +302,5 @@ public class Maze {
 			sb.append("\n");
 		}
 		return sb.toString();
-	}
-
-	/**
-	 * Set the node as type 0 to change it back to a hedge.
-	 * 
-	 * @param row
-	 * @param col
-	 */
-	public void clearNode(int row, int col) {
-		get(row, col).setType(0);
-	}
-	public void clearSpiderNode(int row, int col) {
-		get(row, col).setType(-1);
 	}
 }

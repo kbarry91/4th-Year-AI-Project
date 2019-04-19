@@ -89,9 +89,9 @@ public class GameRunner implements KeyListener {
 	private void updateView() {
 
 		// Set the p-layer object in the maze.
-		view.setPlayer(gameMaze.getP());
-		currentRow = gameMaze.getP().getRow();
-		currentCol = gameMaze.getP().getCol();
+		view.setPlayer(gameMaze.getPlayer());
+		currentRow = gameMaze.getPlayer().getRow();
+		currentCol = gameMaze.getPlayer().getCol();
 
 		view.setCurrentRow(currentRow);
 		view.setCurrentCol(currentCol);
@@ -155,8 +155,8 @@ public class GameRunner implements KeyListener {
 		} else if (e.getKeyCode() == KeyEvent.VK_S) {
 			// Display Player and game Statistics in a pop up.
 			JOptionPane.showMessageDialog(null,
-					"Player Stats:\n Health :" + Math.round(gameMaze.getP().getPlayerHealth()) + "\n Weapon: "
-							+ gameMaze.getP().getWeapon().getName());
+					"Player Stats:\n Health :" + Math.round(gameMaze.getPlayer().getPlayerHealth()) + "\n Weapon: "
+							+ gameMaze.getPlayer().getWeapon().getName());
 		} else {
 			return;
 		}
@@ -190,7 +190,7 @@ public class GameRunner implements KeyListener {
 
 		if (row <= gameMaze.size() - 1 && col <= gameMaze.size() - 1 && gameMaze.get(row, col).getType() == -1) {
 			gameMaze.set(currentRow, currentCol, gameMaze.get(row, col));
-			gameMaze.set(row, col, gameMaze.getP());
+			gameMaze.set(row, col, gameMaze.getPlayer());
 			return true;
 		} else {
 			// System.out.println("F Node is " + gameMaze.get(row, col));
@@ -206,8 +206,8 @@ public class GameRunner implements KeyListener {
 				System.out.println("Contact with sword ");
 				if (Utils.displaySelectOption(1) == JOptionPane.YES_OPTION) {
 					gameMaze.clearNode(row, col);
-					gameMaze.getP().setWeapon(sword);
-					Utils.displayInfo(gameMaze.getP().getWeapon().getName(), true);
+					gameMaze.getPlayer().setWeapon(sword);
+					Utils.displayInfo(gameMaze.getPlayer().getWeapon().getName(), true);
 				} else {
 					Utils.displayInfo(sword.getName(), false);
 				}
@@ -218,8 +218,8 @@ public class GameRunner implements KeyListener {
 				if (Utils.displaySelectOption(3) == JOptionPane.YES_OPTION) {
 					// System.out.println("You selected the " + sword + " weapon");
 					gameMaze.clearNode(row, col);
-					gameMaze.getP().setWeapon(bomb);
-					Utils.displayInfo(gameMaze.getP().getWeapon().getName(), true);
+					gameMaze.getPlayer().setWeapon(bomb);
+					Utils.displayInfo(gameMaze.getPlayer().getWeapon().getName(), true);
 				} else {
 					Utils.displayInfo(bomb.getName(), false);
 				}
@@ -230,8 +230,8 @@ public class GameRunner implements KeyListener {
 				if (Utils.displaySelectOption(4) == JOptionPane.YES_OPTION) {
 					// System.out.println("You selected the " + sword + " weapon");
 					gameMaze.clearNode(row, col);
-					gameMaze.getP().setWeapon(hbomb);
-					Utils.displayInfo(gameMaze.getP().getWeapon().getName(), true);
+					gameMaze.getPlayer().setWeapon(hbomb);
+					Utils.displayInfo(gameMaze.getPlayer().getWeapon().getName(), true);
 				} else {
 					Utils.displayInfo(hbomb.getName(), false);
 				}
@@ -240,12 +240,12 @@ public class GameRunner implements KeyListener {
 			// Type 14 is a health pick up;
 			case 14:
 				// Restore the players health or increase it by 30
-				if (gameMaze.getP().getPlayerHealth() < 60)
-					gameMaze.getP().setPlayerHealth(gameMaze.getP().getPlayerHealth() + 30);
+				if (gameMaze.getPlayer().getPlayerHealth() < 60)
+					gameMaze.getPlayer().setPlayerHealth(gameMaze.getPlayer().getPlayerHealth() + 30);
 				else
-					gameMaze.getP().restoreHealth();
+					gameMaze.getPlayer().restoreHealth();
 
-				Utils.displayGeneralInfo("Health(+30) restored to : " + Math.round(gameMaze.getP().getPlayerHealth()),
+				Utils.displayGeneralInfo("Health(+30) restored to : " + Math.round(gameMaze.getPlayer().getPlayerHealth()),
 						"Health Pick up");
 
 				gameMaze.clearNode(row, col);
