@@ -5,7 +5,7 @@ import java.util.Random;
 
 import ie.gmit.sw.ai.Sprite;
 import ie.gmit.sw.ai.player;
-import ie.gmit.sw.ai.nn.NnFight;
+import ie.gmit.sw.ai.nn.NeuralNetworkFight;
 import ie.gmit.sw.ai.gui.Utils;
 import ie.gmit.sw.ai.traversers.AStarTraversator;
 import ie.gmit.sw.ai.traversers.Node;
@@ -30,7 +30,7 @@ public class Fightable extends Sprite implements Runnable {
 	private Traversator traverse;
 	private Node nextPosition;
 	private boolean canMove;
-	private NnFight nnfight;
+	private NeuralNetworkFight nnfight;
 	private int outcome;
 
 	// searches
@@ -45,7 +45,7 @@ public class Fightable extends Sprite implements Runnable {
 	 * @param p       the player
 	 * @param f       the neural netwprl
 	 */
-	public Fightable(int row, int col, int feature, Object lock, Node[][] maze, player p, NnFight f) {
+	public Fightable(int row, int col, int feature, Object lock, Node[][] maze, player p, NeuralNetworkFight f) {
 		// TODO Auto-generated constructor stub
 		this.row = row;
 		this.col = col;

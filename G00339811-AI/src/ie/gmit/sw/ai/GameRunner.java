@@ -4,52 +4,61 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.WindowEvent;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import ie.gmit.sw.ai.gui.Utils;
-import ie.gmit.sw.ai.nn.NnFight;
+import ie.gmit.sw.ai.nn.NeuralNetworkFight;
 import ie.gmit.sw.ai.traversers.Node;
-import ie.gmit.sw.ai.traversers.Traversator;
 
 /**
  * 
  * @author Kevin Barry - Bachelor of Science (Honours) in Software Development
  *
  *
- * GameRunner is the runner class of the application. Sets the view and sprites while also handling user input.
+ *         GameRunner is the runner class of the application. Sets the view and
+ *         sprites while also handling user input.
  */
 public class GameRunner implements KeyListener {
 	private static final int MAZE_DIMENSION = 50;
 	private static final int IMAGE_COUNT = 16;
 	public static boolean GAME_OVER = false;
-	private static JFrame f;
 	private ControlledSprite player;
 	private GameView view;
-	private Maze model;
+	private Maze gameMaze;
 	private int currentRow;
 	private int currentCol;
 	public int attack;
-	private NnFight nfight = new NnFight();
+	private NeuralNetworkFight nnFight = new NeuralNetworkFight();
 	int reply;// variable for JOPtionPane result
-	private Node nextPosition;
 
 	/**
-	 *  Sets up the game view as well as all associated sprites. 
+	 *  Main Runner method.
 	 *  
+	 * @param args, the command line argument.
+	 * @throws Exception
+	 */
+	public static void main(String[] args) throws Exception {
+		new GameRunner();
+
+	}
+	
+	/**
+	 * Sets up the game view as well as all associated sprites.
+	 * 
 	 * @throws Exception
 	 */
 	public GameRunner() throws Exception {
 
-		// Train the Neural Network at the very start to avoid the game lagging during play.
-		nfight.train();
+		// Train the Neural Network at the very start to avoid the game lagging during
+		// play.
+		nnFight.train();
 
-		model = new Maze(MAZE_DIMENSION, nfight);
-		view = new GameView(model);
+		gameMaze = new Maze(MAZE_DIMENSION, nnFight);
+		view = new GameView(gameMaze);
 
-		// Load the images from the resources and set them as sprites. 
+		// Load the images from the resources and set them as sprites.
 		Sprite[] sprites = getSprites();
 
 		// Set the sprites in view.
@@ -79,18 +88,18 @@ public class GameRunner implements KeyListener {
 	 */
 	private void updateView() {
 
-		// set the player
-		view.setPlayer(model.getP());
-		currentRow = model.getP().getRow();
-		currentCol = model.getP().getCol();
+		// Set the p-layer object in the maze.
+		view.setPlayer(gameMaze.getP());
+		currentRow = gameMaze.getP().getRow();
+		currentCol = gameMaze.getP().getCol();
 
 		view.setCurrentRow(currentRow);
 		view.setCurrentCol(currentCol);
-
 	}
 
 	/**
-	 * Initialise an exit node in the maze for the end of the game and add it to the view. 
+	 * Initialise an exit node in the maze for the end of the game and add it to the
+	 * view.
 	 */
 	private void placeExit() {
 		int[] exitNode = new int[2];
@@ -99,13 +108,18 @@ public class GameRunner implements KeyListener {
 		Node goalNode = new Node(exitNode[0], exitNode[1], 15);
 
 		// Set the exit node as a goal node.
-		model.set(exitNode[0], exitNode[1], goalNode);
-		
+		gameMaze.set(exitNode[0], exitNode[1], goalNode);
+
 		System.out.println("[DEBUG INFO ]Exit Node Set to to [" + exitNode[0] + "][" + exitNode[1] + "]---" + exitNode);
 		System.out.println("Exit node is : " + goalNode);
 		updateView();
 	}
 
+	/**
+	 * KeyPressed handles all keyboard inputs.
+	 * 
+	 * @param e, the key pressed.
+	 */
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT && currentCol < MAZE_DIMENSION - 1) {
 			if (isValidMove(currentRow, currentCol + 1)) {
@@ -131,7 +145,7 @@ public class GameRunner implements KeyListener {
 			view.toggleZoom();
 		} else if (e.getKeyCode() == KeyEvent.VK_H) {
 
-// IMPLEMENT SEARCH FUNCTION FOR PATH CAUSING ISSUES FIX AT END OF PROJECT
+			// IMPLEMENT SEARCH FUNCTION FOR PATH CAUSING ISSUES FIX AT END OF PROJECT
 			/*
 			 * Traversator traveser = new AStarTraversator(model.getP());
 			 * //traveser.traverse(model.get, model.getGoalNode());
@@ -139,75 +153,73 @@ public class GameRunner implements KeyListener {
 			 * model.getGoalNode().getCol(),traveser);
 			 */
 		} else if (e.getKeyCode() == KeyEvent.VK_S) {
-			// - Display Player Stats in a popup.
-			JOptionPane.showMessageDialog(null, "Player Stats:\n Health :" + Math.round(model.getP().getPlayerHealth())
-					+ "\n Weapon: " + model.getP().getWeapon().getName());
+			// Display Player and game Statistics in a pop up.
+			JOptionPane.showMessageDialog(null,
+					"Player Stats:\n Health :" + Math.round(gameMaze.getP().getPlayerHealth()) + "\n Weapon: "
+							+ gameMaze.getP().getWeapon().getName());
 		} else {
 			return;
 		}
 
 		updateView();
 	}
-/*
-	public void traverseHelper(int row, int col, Traversator t) {
-		t.traverse(model.getMaze(), model.getGoalNode());
-		nextPosition = t.getNextNode();
-		if (nextPosition != null) {
-			canMove = true;
-		} else {
-			canMove = false;
-		}
-	}
-*/
+
+	/*
+	 * public void traverseHelper(int row, int col, Traversator t) {
+	 * t.traverse(model.getMaze(), model.getGoalNode()); nextPosition =
+	 * t.getNextNode(); if (nextPosition != null) { canMove = true; } else { canMove
+	 * = false; } }
+	 */
 	public void keyReleased(KeyEvent e) {
 	} // Ignore
-
-	private static void closeGame() {
-
-		// close the game
-		f.dispatchEvent(new WindowEvent(f, WindowEvent.WINDOW_CLOSING));
-	}
 
 	public void keyTyped(KeyEvent e) {
 	} // Ignore
 
+	/**
+	 * Checks if a move is valid and if it is acts accordingly.
+	 * 
+	 * @param row, the row position that the player is attempting to move to.
+	 * @param col, the column position that the player is attempting to move to.
+	 * @return true if the player move is valid, false if invalid.
+	 */
 	private boolean isValidMove(int row, int col) {
 		Weapon sword = new Weapon("sword", 20);
 		Weapon bomb = new Weapon("bomb", 50);
 		Weapon hbomb = new Weapon("hbomb", 75);
 
-		if (row <= model.size() - 1 && col <= model.size() - 1 && model.get(row, col).getType() == -1) {
-			model.set(currentRow, currentCol, model.get(row, col));
-			model.set(row, col, model.getP());
+		if (row <= gameMaze.size() - 1 && col <= gameMaze.size() - 1 && gameMaze.get(row, col).getType() == -1) {
+			gameMaze.set(currentRow, currentCol, gameMaze.get(row, col));
+			gameMaze.set(row, col, gameMaze.getP());
 			return true;
 		} else {
-			System.out.println("F Node   is " + model.get(row, col));
-			System.out.println("F Node  type is " + model.get(row, col).getType());
+			// System.out.println("F Node is " + gameMaze.get(row, col));
+			// System.out.println("F Node type is " + gameMaze.get(row, col).getType());
 
 			// Switch on the type of node.
-			switch (model.get(row, col).getType()) {
+			// For each object detected show a prompt and allow user to select YES/NO to
+			// pick up the item
+			switch (gameMaze.get(row, col).getType()) {
 
 			// Type 1 is a sword Weapon Object.
 			case 1:
 				System.out.println("Contact with sword ");
 				if (Utils.displaySelectOption(1) == JOptionPane.YES_OPTION) {
-					// System.out.println("You selected the " + sword + " weapon");
-					model.clearNode(row, col);
-					model.getP().setWeapon(sword);
-					Utils.displayInfo(model.getP().getWeapon().getName(), true);
+					gameMaze.clearNode(row, col);
+					gameMaze.getP().setWeapon(sword);
+					Utils.displayInfo(gameMaze.getP().getWeapon().getName(), true);
 				} else {
 					Utils.displayInfo(sword.getName(), false);
 				}
-
 				break;
 
 			// Type 3 is a bomb Weapon Object.
 			case 3:
 				if (Utils.displaySelectOption(3) == JOptionPane.YES_OPTION) {
 					// System.out.println("You selected the " + sword + " weapon");
-					model.clearNode(row, col);
-					model.getP().setWeapon(bomb);
-					Utils.displayInfo(model.getP().getWeapon().getName(), true);
+					gameMaze.clearNode(row, col);
+					gameMaze.getP().setWeapon(bomb);
+					Utils.displayInfo(gameMaze.getP().getWeapon().getName(), true);
 				} else {
 					Utils.displayInfo(bomb.getName(), false);
 				}
@@ -217,9 +229,9 @@ public class GameRunner implements KeyListener {
 			case 4:
 				if (Utils.displaySelectOption(4) == JOptionPane.YES_OPTION) {
 					// System.out.println("You selected the " + sword + " weapon");
-					model.clearNode(row, col);
-					model.getP().setWeapon(hbomb);
-					Utils.displayInfo(model.getP().getWeapon().getName(), true);
+					gameMaze.clearNode(row, col);
+					gameMaze.getP().setWeapon(hbomb);
+					Utils.displayInfo(gameMaze.getP().getWeapon().getName(), true);
 				} else {
 					Utils.displayInfo(hbomb.getName(), false);
 				}
@@ -227,18 +239,20 @@ public class GameRunner implements KeyListener {
 
 			// Type 14 is a health pick up;
 			case 14:
-				// health pickup
-				if (model.getP().getPlayerHealth() < 60)
-					model.getP().setPlayerHealth(model.getP().getPlayerHealth() + 30);
+				// Restore the players health or increase it by 30
+				if (gameMaze.getP().getPlayerHealth() < 60)
+					gameMaze.getP().setPlayerHealth(gameMaze.getP().getPlayerHealth() + 30);
 				else
-					model.getP().restoreHealth();
+					gameMaze.getP().restoreHealth();
 
-				Utils.displayGeneralInfo("Health(+30) restored to : " + Math.round(model.getP().getPlayerHealth()),
+				Utils.displayGeneralInfo("Health(+30) restored to : " + Math.round(gameMaze.getP().getPlayerHealth()),
 						"Health Pick up");
 
-				model.clearNode(row, col);
+				gameMaze.clearNode(row, col);
 
 				break;
+
+			// Type 15 is The exit Node.
 			case 15:
 				System.out.println("Contact with Exit ");
 				Utils.displayGeneralInfo("Hurray You escaped the spiders!!", "Game Complete");
@@ -247,52 +261,56 @@ public class GameRunner implements KeyListener {
 				// end the game.
 				System.exit(0);
 				break;
+
+			// Type 613 are spider objects and must be destroyed after attack.
 			case 6:
 				System.out.println("Contact with Black ");
-				model.clearSpiderNode(row, col);
+				gameMaze.clearSpiderNode(row, col);
 				break;
 			case 7:
 				System.out.println("Contact with Blue ");
-				model.clearSpiderNode(row, col);
+				gameMaze.clearSpiderNode(row, col);
 				break;
 			case 8:
 				System.out.println("Contact with Brown ");
-				model.clearSpiderNode(row, col);
+				gameMaze.clearSpiderNode(row, col);
 				break;
 			case 9:
 				System.out.println("Contact with Green ");
-				model.clearSpiderNode(row, col);
+				gameMaze.clearSpiderNode(row, col);
 				break;
 			case 10:
 				System.out.println("Contact with Grey ");
-				model.clearSpiderNode(row, col);
+				gameMaze.clearSpiderNode(row, col);
 				break;
 			case 11:
 				System.out.println("Contact with Orange ");
-				model.clearSpiderNode(row, col);
+				gameMaze.clearSpiderNode(row, col);
 				break;
 			case 12:
 				System.out.println("Contact with Red ");
-				model.clearSpiderNode(row, col);
+				gameMaze.clearSpiderNode(row, col);
 				break;
 			case 13:
 				System.out.println("Contact with Yellow ");
-				model.clearSpiderNode(row, col);
+				gameMaze.clearSpiderNode(row, col);
 				break;
 
 			}
 		}
 
-		return false;// player cant move
+		// The player cannot move to the position
+		return false;
 	}
 
-	
-
+	/**
+	 * Reads in all the images from the resource directory. Each image is assigned
+	 * index that can be used to reference the sprite when attaching it to an obje
+	 * 
+	 * @return An array of Sprites representing game objects.
+	 * @throws Exception
+	 */
 	private Sprite[] getSprites() throws Exception {
-		// Read in the images from the resources directory as sprites. Note that each
-		// sprite will be referenced by its index in the array, e.g. a 3 implies a
-		// Bomb...
-		// Ideally, the array should dynamically created from the images...
 
 		player = new ControlledSprite(0, "Main Player", 3, 500, "resources/images/player/d1.png",
 				"resources/images/player/d2.png", "resources/images/player/d3.png", "resources/images/player/l1.png",
@@ -330,8 +348,4 @@ public class GameRunner implements KeyListener {
 		return sprites;
 	}
 
-	public static void main(String[] args) throws Exception {
-		new GameRunner();
-
-	}
 }

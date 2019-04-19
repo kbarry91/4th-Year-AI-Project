@@ -1,14 +1,15 @@
 package ie.gmit.sw.ai.nn;
 
-/*
- * ------------------------------------------------------------------------
- * B.Sc. (Hons) in Software Development - Artificial Intelligence
- * ------------------------------------------------------------------------
- * 
- * A simple implementation if the back-propagation training algorithm. This
- * class is designed to work with a 3-layer neural network. 
- */
+
 import java.text.DecimalFormat;
+
+/**
+ *  A simple implementation if the back-propagation training algorithm. This
+ * class is designed to work with a 3-layer neural network. 
+ *
+ * @author Kevin Barry - Bachelor of Science (Honours) in Software Development
+ *
+ */
 public class BackpropagationTrainer implements Trainator{
 	private static final double MOMENTUM = 0.95; //Controls the rate of descent
 	private NeuralNetwork net;

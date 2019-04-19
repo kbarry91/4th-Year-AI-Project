@@ -4,7 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import ie.gmit.sw.ai.fuzzy.Fightable;
-import ie.gmit.sw.ai.nn.NnFight;
+import ie.gmit.sw.ai.nn.NeuralNetworkFight;
 import ie.gmit.sw.ai.traversers.Node;
 
 public class Maze {
@@ -22,9 +22,9 @@ public class Maze {
 	// Initilizing the neural network class here
 	// train the NN
 	// we dont train the nn each time the spider is running
-	private NnFight f;
+	private NeuralNetworkFight f;
 
-	public Maze(int dimension, NnFight nfight) {
+	public Maze(int dimension, NeuralNetworkFight nfight) {
 
 		// Initilizing
 		this.f = nfight;

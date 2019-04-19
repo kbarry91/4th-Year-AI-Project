@@ -14,7 +14,13 @@ package ie.gmit.sw.ai.nn;
  */
 
 import java.util.*;
+
 import ie.gmit.sw.ai.nn.activator.*;
+/**
+ * 
+ * @author Kevin Barry - Bachelor of Science (Honours) in Software Development
+ *
+ */
 public class NeuralNetwork{
 	private Activator activator;
 	private double[] inputs; //Stores inputs X1, X2,...,Xn 
