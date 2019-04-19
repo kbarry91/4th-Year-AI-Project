@@ -32,7 +32,7 @@ public class Maze {
 
 	// Initialise the NeuralNetworkFight class.
 	private NeuralNetworkFight nnFighter;
-
+private Node nextPosition;
 	/**
 	 * Constructor to create the maze object. The NeuralNetworkFight is taken in as
 	 * a parameter as it was ttrained at the start of the program.
@@ -63,6 +63,10 @@ public class Maze {
 		// Set the amount of enemy objects to be added.
 		// 0.001 sets it to .1 percent of maze.
 		featureNumber = (int) ((dimension * dimension) * 0.001);
+		
+		// Instantiate the player.
+		player(5, -1);
+		
 		addFeature(6, -1, featureNumber); // 6 is a Black Spider, -1 is a blank background.
 		addFeature(7, -1, featureNumber); // 7 is a Blue Spider, -1 is a blank background.
 		addFeature(8, -1, featureNumber); // 8 is a Brown Spider, -1 is a blank background.
@@ -73,8 +77,7 @@ public class Maze {
 		addFeature(13, -1, featureNumber); // = is a Yellow Spider,-1 is a blank background.
 		addFeature(15, 0, 1);// 15 is a exit object
 
-		// Instantiate the player.
-		player(5, -1);
+		
 	}
 
 	/**
@@ -113,6 +116,7 @@ public class Maze {
 				// Pass the objects to the class containing the Thread pool to run on separate
 				// threads.
 				if (feature > 5 && feature < 14) {
+					System.out.println("[add Feature]Player:"+player);
 					Fightable fighter = new Fightable(row, col, feature, lock, maze, player, this.nnFighter);
 
 					// Execute the thread pool with the fightable.

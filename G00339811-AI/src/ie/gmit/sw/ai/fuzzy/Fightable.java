@@ -46,6 +46,9 @@ public class Fightable extends Sprite implements Runnable {
 	 * @param f       the neural netwprl
 	 */
 	public Fightable(int row, int col, int feature, Object lock, Node[][] maze, player p, NeuralNetworkFight f) {
+		System.out.println("[Fightable]P : "+ p);
+		System.out.println("[Fightable]this.P : "+ this.p);
+
 		// TODO Auto-generated constructor stub
 		this.row = row;
 		this.col = col;
@@ -60,18 +63,18 @@ public class Fightable extends Sprite implements Runnable {
 		this.executor = lock;
 		this.maze = maze;
 
-		p.setPlayerHealth(100);
+		this.p.setPlayerHealth(100);
 
 		this.nnfight = f;
 
 		// ONLY GIVING 2 spiders follow
 		if (feature == 6) {// fuzzy spider
 			// assign a search
-			traverse = new AStarTraversator(p);
+			traverse = new AStarTraversator(this.p);
 		} else if (feature == 11) {// nn spider
-			traverse = new AStarTraversator(p);
+			traverse = new AStarTraversator(this.p);
 		}else if (feature == 12) {// nn spider
-			traverse = new AStarTraversator(p);
+			traverse = new AStarTraversator(this.p);
 		}
 
 	}
@@ -92,11 +95,11 @@ public class Fightable extends Sprite implements Runnable {
 
 					// fuzzy stuff
 					// if player is touvhing
-					if (node.getHeuristic(p) == 1) {
+					if (node.getHeuristic(this.p) == 1) {
 						System.out.println("The player is touching spider<=1s");
 						System.out.println("[super.getanger<=1:] : "+super.getAnger());
 						fight(super.getAnger());
-					} else if (canMove && node.getHeuristic(p) < 10) {
+					} else if (canMove && node.getHeuristic(this.p) < 10) {
 						System.out.println("The Player is Near!! Follow Him");
 						followPlayer();
 					} else {
@@ -109,13 +112,13 @@ public class Fightable extends Sprite implements Runnable {
 					if (feature == 11 || feature == 12) {
 						traverse(node.getRow(), node.getCol(), traverse);
 					}
-					if (node.getHeuristic(p) == 1) {
+					if (node.getHeuristic(this.p) == 1) {
 						System.out.println("The player is touching spiders11");
 						System.out.println("[super.getanger==11:] : "+super.getAnger());
 						fight(super.getAnger());
 					} else if (canMove && node.getHeuristic(p) < 5) {
 						System.out.println("Neural Network Training within Range");
-						fightNn(p.getPlayerHealth(), super.getAnger(), 1);
+						fightNn(this.p.getPlayerHealth(), super.getAnger(), 1);
 
 					} else {
 						move();
