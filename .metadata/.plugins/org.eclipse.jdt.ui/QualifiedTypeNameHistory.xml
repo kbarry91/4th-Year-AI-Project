@@ -5,4 +5,19 @@
 <fullyQualifiedTypeName name="ie.gmit.sw.ai.Weapon"/>
 <fullyQualifiedTypeName name="ie.gmit.sw.ai.Fight"/>
 <fullyQualifiedTypeName name="java.lang.Double"/>
+<fullyQualifiedTypeName name="ie.gmit.sw.ai.nn.NnFight"/>
+<fullyQualifiedTypeName name="ie.gmit.sw.ai.Sprite"/>
+<fullyQualifiedTypeName name="java.lang.String"/>
+<fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
+<fullyQualifiedTypeName name="ie.gmit.sw.ai.GameStats"/>
+<fullyQualifiedTypeName name="javax.swing.JPanel"/>
+<fullyQualifiedTypeName name="ie.gmit.sw.ai.gui.GameOverJOptionPane"/>
+<fullyQualifiedTypeName name="ie.gmit.sw.ai.nn.Utils"/>
+<fullyQualifiedTypeName name="ie.gmit.sw.ai.Utils"/>
+<fullyQualifiedTypeName name="ie.gmit.sw.ai.traversers.Node"/>
+<fullyQualifiedTypeName name="java.lang.ExceptionInInitializerError"/>
+<fullyQualifiedTypeName name="ie.gmit.sw.ai.traversers.Traversator"/>
+<fullyQualifiedTypeName name="ie.gmit.sw.ai.traversers.AStarTraversator"/>
+<fullyQualifiedTypeName name="ie.gmit.sw.ai.gui.Utils"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
 </qualifiedTypeNameHistroy>

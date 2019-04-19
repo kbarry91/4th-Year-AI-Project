@@ -71,6 +71,7 @@ public class GameRunner implements KeyListener {
 
 		// Set exit values as a goalNode of Node type so ity can be used in a search
 		goalNode = new Node(exitNode[0], exitNode[1]);
+		goalNode.setGoalNode(true);
 
 		model.set(exitNode[0], exitNode[1], '4'); // exit is at index 5
 		System.out.println("Exit Node Set to to [" + exitNode[0] + "][" + exitNode[1] + "]---" + exitNode);
@@ -117,8 +118,10 @@ public class GameRunner implements KeyListener {
 			} else {
 				JOptionPane.showMessageDialog(null, "Path Help  activated ", "View Path To goal",
 						JOptionPane.INFORMATION_MESSAGE);
+				
 				Traversator traverse = algorithm(0); // Try to make it do A*.
 				playerNode = new Node(currentRow, currentCol);
+				playerNode.setNodeType('P');
 				traverse.traverse(model.getMazeNode(), playerNode);
 			}
 		} else {

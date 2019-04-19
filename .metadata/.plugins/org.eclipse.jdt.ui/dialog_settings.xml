@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<item value="true" key="Replace"/>
+	<item value="true" key="Annotations"/>
+	<item value="true" key="Comments"/>
 	<item value="C:\Users\kevo-\College4\Artificial\jars" key="org.eclipse.jdt.ui.lastextjar"/>
+	<item value="false" key="InstanceOf"/>
+	<item value="filter_imports;" key="filters_last_used"/>
+	<section name="org.eclipse.ltk.ui.refactoring.settings">
+		<item value="false" key="updateQualifiedNames"/>
+		<item value="*" key="patterns"/>
+		<item value="false" key="updateSimilarElements"/>
+		<item value="1" key="updateSimilarElementsMatchStrategy"/>
+		<item value="false" key="updateTextualMatches"/>
+	</section>
 	<section name="GenerateConstructorUsingFieldsSelectionDialog">
 		<item value="false" key="OmitCallToSuper"/>
 	</section>
@@ -38,12 +50,23 @@
 		<item value="1024" key="DIALOG_X_ORIGIN"/>
 		<item value="84" key="DIALOG_Y_ORIGIN"/>
 	</section>
+	<section name="RefactoringWizard.preview">
+		<item value="600" key="width"/>
+		<item value="400" key="height"/>
+	</section>
 	<section name="SourceActionDialog.methods">
 		<item value="false" key="SynchronizedModifier"/>
 		<item value="false" key="Comments"/>
 		<item value="2" key="InsertPosition.v2"/>
 		<item value="1" key="VisibilityModifier"/>
 		<item value="false" key="FinalModifier"/>
+	</section>
+	<section name="org.eclipse.jdt.internal.ui.preferences.EditTemplateDialog_dialogBounds">
+		<item value="613" key="DIALOG_WIDTH"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="300" key="DIALOG_HEIGHT"/>
+		<item value="12" key="DIALOG_X_ORIGIN"/>
+		<item value="142" key="DIALOG_Y_ORIGIN"/>
 	</section>
 	<section name="ClasspathContainerSelectionPage">
 		<item value="0" key="index"/>
@@ -55,6 +78,23 @@
 	</section>
 	<section name="BuildPathsPropertyPage">
 		<item value="2" key="pageIndex"/>
+	</section>
+	<section name="JavaSearchPage">
+		<item value="1" key="HISTORY_SIZE"/>
+		<item value="false" key="CASE_SENSITIVE"/>
+		<item value="15" key="INCLUDE_MASK"/>
+		<section name="HISTORY0">
+			<item value="false" key="isCaseSensitive"/>
+			<item value="" key="javaElement"/>
+			<item value="3" key="scope"/>
+			<item value="15" key="includeMask"/>
+			<item value="resetA" key="pattern"/>
+			<item value="2" key="limitTo"/>
+			<item value="0" key="matchLocations"/>
+			<item value="0" key="searchFor"/>
+			<list key="workingSets">
+			</list>
+		</section>
 	</section>
 	<section name="completion_proposal_size">
 	</section>

@@ -6,6 +6,7 @@ import java.awt.Color;
 
 public class TraversatorStats {
 	public static int printStats(Node node, long time, int visitCount, boolean countSteps){
+		System.out.println("[TraversatorStats]printStats()");
 		double depth = 0;
 		
 		int count = 0;
