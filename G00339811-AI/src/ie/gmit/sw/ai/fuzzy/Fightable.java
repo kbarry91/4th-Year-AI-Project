@@ -6,10 +6,10 @@ import java.util.Random;
 import ie.gmit.sw.ai.Sprite;
 import ie.gmit.sw.ai.player;
 import ie.gmit.sw.ai.nn.NeuralNetworkFight;
-import ie.gmit.sw.ai.gui.Utils;
 import ie.gmit.sw.ai.traversers.AStarTraversator;
 import ie.gmit.sw.ai.traversers.Node;
 import ie.gmit.sw.ai.traversers.Traversator;
+import ie.gmit.sw.ai.utils.Utils;
 
 /**
  * Fightable implements runnable to allow enemies to run on separate threads.

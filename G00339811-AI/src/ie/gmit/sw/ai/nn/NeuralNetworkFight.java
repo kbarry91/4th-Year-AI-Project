@@ -1,7 +1,7 @@
 package ie.gmit.sw.ai.nn;
 
 import ie.gmit.sw.ai.nn.activator.*;
-
+import ie.gmit.sw.ai.utils.*;
 //Class contains the training data, expected output and actions 
 
 /**
@@ -11,11 +11,13 @@ import ie.gmit.sw.ai.nn.activator.*;
  *
  */
 public class NeuralNetworkFight {
-	// need to load data from fi;le
-//	private final double[][] data ;
-//	private final double[][] expected ;
 	
-	private final double[][] data = { //Health, Weapon, Anger level
+	// Load the training data and expected data from a file.
+	private final double[][] data = DataExtractor.extractDataFromFile("resources/neural/trainingData");
+	private final double[][] expected = DataExtractor.extractDataFromFile("resources/neural/expectedData");
+
+	/*
+ 	private final double[][] datca = { //Health, Weapon, Anger level
 			{ 2, 0, 0 }, { 2, 0, 0 }, { 2, 0, 1 }, { 2, 0, 1 }, { 2, 1, 0 },
 			{ 2, 1, 0 }, { 2, 1, 2}, { 1, 0, 0 }, { 1, 0, 0 }, { 1, 0, 1 }, { 1, 0, 1 }, 
 			{ 1, 1, 0 }, { 1, 1, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 1 }, 
@@ -27,7 +29,7 @@ public class NeuralNetworkFight {
 			{ 1.0, 0.0, 0.0}, { 0.0, 0.0, 0.0}, { 0.0, 0.0, 0.0}, { 0.0, 0.0, 0.0 }, 
 			{ 0.0, 0.0, 1.0}, { 0.0, 0.0, 0.0}, { 0.0, 0.0, 0.0}, { 0.0, 1.0, 0.0 }, 
 			{ 0.0, 1.0, 0.0 }, { 0.0, 0.0, 0.0}, { 0.0, 0.0, 1.0}, { 0.0, 0.0, 1.0} };
-	
+	*/
 	private NeuralNetwork neuralNet = null;
 	
 	public NeuralNetworkFight() {

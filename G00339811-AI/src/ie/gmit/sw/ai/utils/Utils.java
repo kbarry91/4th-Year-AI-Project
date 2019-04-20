@@ -1,4 +1,4 @@
-package ie.gmit.sw.ai.gui;
+package ie.gmit.sw.ai.utils;
 
 import javax.swing.JOptionPane;
 

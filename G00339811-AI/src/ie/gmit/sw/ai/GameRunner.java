@@ -8,9 +8,9 @@ import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import ie.gmit.sw.ai.gui.Utils;
 import ie.gmit.sw.ai.nn.NeuralNetworkFight;
 import ie.gmit.sw.ai.traversers.Node;
+import ie.gmit.sw.ai.utils.Utils;
 
 /**
  * 

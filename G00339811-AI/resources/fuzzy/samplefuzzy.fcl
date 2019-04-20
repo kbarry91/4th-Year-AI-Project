@@ -35,9 +35,9 @@ FUNCTION_BLOCK fight
 		ACT : MIN;
 		ACCU : MAX;
 		
-		RULE 0: IF weapon IS harmless AND opponent IS weak THEN damage IS moderate;
-		RULE 1: IF weapon IS harmless AND opponent IS average THEN damage IS low;
-		RULE 2: IF weapon IS harmless AND opponent IS strong THEN damage IS low;
+		RULE 0: IF weapon IS harmless AND opponent IS weak THEN damage IS low;
+		RULE 1: IF weapon IS harmless AND opponent IS average THEN damage IS moderate;
+		RULE 2: IF weapon IS harmless AND opponent IS strong THEN damage IS fatal;
 		RULE 3: IF weapon IS dangerous AND opponent IS weak THEN damage IS low;
 		RULE 4: IF weapon IS dangerous AND opponent IS average THEN damage IS moderate;
 		RULE 5: IF weapon IS dangerous AND opponent IS strong THEN damage IS moderate;

@@ -35,6 +35,8 @@ KeyPress S displays player and game statistics such as health and current weapon
 	PLayer health is initially set to 100 points
 	Can be increased by 30 points by collecting a health pickup
 	
+** File reading
+	Reading training and expected dat from file.
 ** Exit node
 	Reaching the exit node (exit sign) with health remaining finishes the game.
 ** Pickups
