@@ -17,9 +17,6 @@ public class Maze {
 	// A 2-dimensional Node array that represents the game maze.
 	private Node[][] maze;
 
-	// Lock object used to run the while loop in runnable.
-	private Object lock = new Object();
-
 	// The goal node.
 	public Node goalNode;
 
@@ -27,12 +24,16 @@ public class Maze {
 	// Assign Thread pool to Executor service used to track tasks.
 	private ExecutorService executor = Executors.newCachedThreadPool();
 
+	// Lock is used to prevent deadlock in a scenario when multiple threads try to
+	// access a function.
+	private Object lockThread= new Object();
+
 	// Player object.
 	private player player;
 
 	// Initialise the NeuralNetworkFight class.
 	private NeuralNetworkFight nnFighter;
-	
+
 	/**
 	 * Constructor to create the maze object. The NeuralNetworkFight is taken in as
 	 * a parameter as it was ttrained at the start of the program.
@@ -54,31 +55,31 @@ public class Maze {
 		// Set the amount of pick up objects to be added.
 		// 0.01 sets it to 1 percent of maze.
 		int featureNumber = (int) ((dimension * dimension) * 0.01);
-		addFeature(1, 0, featureNumber); // 1 is a sword, 0 is a hedge
-		addFeature(2, 0, featureNumber); // 2 is help, 0 is a hedge
-		addFeature(3, 0, featureNumber); // 3 is a bomb, 0 is a hedge
-		addFeature(4, 0, featureNumber); // 4 is a hydrogen bomb, 0 is a hedge
-		addFeature(14, 0, featureNumber);// 14 is a health pickup , 0 is a hedge
+		addFeature(1, 0, featureNumber, 0); // 1 is a sword, 0 is a hedge
+		addFeature(2, 0, featureNumber, 0); // 2 is help, 0 is a hedge
+		addFeature(3, 0, featureNumber, 0); // 3 is a bomb, 0 is a hedge
+		addFeature(4, 0, featureNumber, 0); // 4 is a hydrogen bomb, 0 is a hedge
+		addFeature(14, 0, featureNumber, 0);// 14 is a health pickup , 0 is a hedge
 
 		// Set the amount of enemy objects to be added.
 		// 0.001 sets it to .1 percent of maze.
 		featureNumber = (int) ((dimension * dimension) * 0.001);
-		
-		// Instantiate the player.
-		player(5, -1);
-		
-		addFeature(6, -1, featureNumber); // 6 is a Black Spider, -1 is a blank background.
-		addFeature(7, -1, featureNumber); // 7 is a Blue Spider, -1 is a blank background.
-		addFeature(8, -1, featureNumber); // 8 is a Brown Spider, -1 is a blank background.
-		addFeature(9, -1, featureNumber); // 9 is a Green Spider, -1 is a blank background.
-		addFeature(10, -1, featureNumber); // : is a Grey Spider, -1 is a blank background.
-		addFeature(11, -1, featureNumber); // ; is a Orange Spider,-1 is a blank background.
-		addFeature(12, -1, featureNumber); // < is a Red Spider, -1 is a blank background.
-		addFeature(13, -1, featureNumber); // = is a Yellow Spider,-1 is a blank background.
-		addFeature(15, 0, 1);// 15 is a exit object
 
 		// Instantiate the player.
-		//player(5, -1);
+		player(5, -1);
+
+		addFeature(6, -1, featureNumber, 80); // 6 is a Black Spider, -1 is a blank background.
+		addFeature(7, -1, featureNumber, 60); // 7 is a Blue Spider, -1 is a blank background.
+		addFeature(8, -1, featureNumber, 40); // 8 is a Brown Spider, -1 is a blank background.
+		addFeature(9, -1, featureNumber, 20); // 9 is a Green Spider, -1 is a blank background.
+		addFeature(10, -1, featureNumber, 10); // : is a Grey Spider, -1 is a blank background.
+		addFeature(11, -1, featureNumber, 60); // ; is a Orange Spider,-1 is a blank background.
+		addFeature(12, -1, featureNumber, 40); // < is a Red Spider, -1 is a blank background.
+		addFeature(13, -1, featureNumber, 20); // = is a Yellow Spider,-1 is a blank background.
+		addFeature(15, 0, 1, 0);// 15 is a exit object
+
+		// Instantiate the player.
+		// player(5, -1);
 	}
 
 	/**
@@ -101,7 +102,7 @@ public class Maze {
 	 * @param replace, the valuer to replace.
 	 * @param number, the number of features to add.
 	 */
-	private void addFeature(int feature, int replace, int number) {
+	private void addFeature(int feature, int replace, int number, int damage) {
 
 		int counter = 0;
 
@@ -117,8 +118,7 @@ public class Maze {
 				// Pass the objects to the class containing the Thread pool to run on separate
 				// threads.
 				if (feature > 5 && feature < 14) {
-					System.out.println("[add Feature]Player:"+player);
-					Fightable fighter = new Fightable(row, col, feature, lock, maze, player, this.nnFighter);
+					Fightable fighter = new Fightable(row, col, feature, maze, player, damage,lockThread);
 
 					// Execute the thread pool with the fightable.
 					executor.execute(fighter);

@@ -28,6 +28,9 @@ public class player extends Node {
 		this.maze = maze;
 		// Create a new weapon object.
 		this.weapon = new Weapon();
+		
+		// Initilse player health.
+		setPlayerHealth(MAXHEALTH);
 
 	}
 

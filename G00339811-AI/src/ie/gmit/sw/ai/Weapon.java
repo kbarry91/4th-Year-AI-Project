@@ -8,7 +8,7 @@ package ie.gmit.sw.ai;
  */
 public class Weapon {
 	private String name;
-	private double damage;
+	private int damage;
 
 	/**
 	 * Null constructor  to set default values. 
@@ -24,7 +24,7 @@ public class Weapon {
 	 * @param name the name of the weapon.
 	 * @param damage the damage applied by the weapon.
 	 */
-	public Weapon(String name, double damage) {
+	public Weapon(String name, int damage) {
 		super();
 		this.name = name;
 		this.damage = damage;
@@ -38,11 +38,11 @@ public class Weapon {
 		this.name = name;
 	}
 
-	public double getDamage() {
+	public int getDamage() {
 		return damage;
 	}
 
-	public void setDamage(double damage) {
+	public void setDamage(int damage) {
 		this.damage = damage;
 	}
 

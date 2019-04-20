@@ -11,7 +11,12 @@ import ie.gmit.sw.ai.traversers.AStarTraversator;
 import ie.gmit.sw.ai.traversers.Node;
 import ie.gmit.sw.ai.traversers.Traversator;
 
-// runnable thread each spiuder with player
+/**
+ * Fightable implements runnable to allow enemies to run on separate threads.
+ * 
+ * @author Kevin Barry - Bachelor of Science (Honours) in Software Development
+ *
+ */
 public class Fightable extends Sprite implements Runnable {
 
 	// variables
@@ -20,19 +25,29 @@ public class Fightable extends Sprite implements Runnable {
 	private int feature;
 
 	private Node node = new Node(row, col, feature);
-	private Object executor;// name it lock(true when thread is running).Prevent deadlock... CAN CHNAGE TO
-							// BOOLEAN
+
+	// Lock is used to prevent deadlock in a scenario when multiple threads try to
+	// access a function. 
+	private Object lockThread ;
+
+	// KeepThreadAlive is used to control the live/die state of a thread.
+	private Boolean keepThreadAlive;
+	
 	private Node[][] maze;
 
 	private Random random = new Random();
 	private Node lastNode;
-	private player p;
+	private player player;
 	private Traversator traverse;
 	private Node nextPosition;
 	private boolean canMove;
 	private NeuralNetworkFight nnfight;
 	private int outcome;
 
+	// The damage a spider can inflict
+	private int fighterDamage;
+	
+	// 
 	// searches
 
 	/**
@@ -45,82 +60,87 @@ public class Fightable extends Sprite implements Runnable {
 	 * @param p       the player
 	 * @param f       the neural netwprl
 	 */
-	public Fightable(int row, int col, int feature, Object lock, Node[][] maze, player p, NeuralNetworkFight f) {
-		System.out.println("[Fightable]P : "+ p);
-		System.out.println("[Fightable]this.P : "+ this.p);
-
+	public Fightable(int row, int col, int feature, Node[][] maze, player p,int damage,Object lockThread) {
 		// TODO Auto-generated constructor stub
 		this.row = row;
 		this.col = col;
 		this.feature = feature;
 		// player
-		this.p = p;
+		this.player = p;
+		this.fighterDamage = damage;
 
 		node.setCol(col);
 		node.setRow(row);
 		node.setType(feature);
 
-		this.executor = lock;
 		this.maze = maze;
 
-		this.p.setPlayerHealth(100);
-
-		this.nnfight = f;
+		//this.player.setPlayerHealth(100);
+		this.keepThreadAlive = true;
+		this.lockThread= lockThread;
+		//this.nnfight = f;
 
 		// ONLY GIVING 2 spiders follow
 		if (feature == 6) {// fuzzy spider
 			// assign a search
-			traverse = new AStarTraversator(this.p);
+			System.out.println("Black spider searching for player using AStarTraversator");
+
+			traverse = new AStarTraversator(this.player);
 		} else if (feature == 11) {// nn spider
-			traverse = new AStarTraversator(this.p);
-		}else if (feature == 12) {// nn spider
-			traverse = new AStarTraversator(this.p);
+			System.out.println("Orange spider searching for player using AStarTraversator");
+			traverse = new AStarTraversator(this.player);
+		} else if (feature == 12) {// nn spider
+			System.out.println("Red spider searching for player using AStarTraversator");
+
+			traverse = new AStarTraversator(this.player);
 		}
 
 	}
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		while (true) {
+		while (this.keepThreadAlive) {
 			try {
 				Thread.sleep(1000 * feature / 2);
 
-				// fuzzy stuff
+				// 6 = Black Spider - 7 = Blue spider -  8 = Brown Spider - 9 = Greewn spider..
 				if (feature >= 6 && feature <= 9) {
-// fuzzy spiders to fuzzy stuff
-					if (feature == 6) {// black is searcjing
+					// 6 is black searching spider
+					if (feature == 6) {
 						traverse(node.getRow(), node.getCol(), traverse);
 					}
 
-					// fuzzy stuff
-					// if player is touvhing
-					if (node.getHeuristic(this.p) == 1) {
-						System.out.println("The player is touching spider<=1s");
-						System.out.println("[super.getanger<=1:] : "+super.getAnger());
-						fight(super.getAnger());
-					} else if (canMove && node.getHeuristic(this.p) < 10) {
-						System.out.println("The Player is Near!! Follow Him");
+					/// If player is touching spider
+					if (node.getHeuristic(this.player) == 1) {
+						System.out.println("Spider has caught the player !");
+						// start a fight.
+						fightFuzzy(fighterDamage);
+						
+					} else if (canMove && node.getHeuristic(this.player) < 10) {
+						System.out.println("Spider(fuzzy) is withen 10 squares and is now following player");
+						// follow player.
 						followPlayer();
 					} else {
+						// move randomly
 						move();
 					}
+
 				} else {
-					// neural net stuff
-// nn spiders do nn stuff
-					// oranhe
+					
+					// 11 = Orange Spider - 12 = Red spider.
 					if (feature == 11 || feature == 12) {
 						traverse(node.getRow(), node.getCol(), traverse);
 					}
-					if (node.getHeuristic(this.p) == 1) {
-						System.out.println("The player is touching spiders11");
-						System.out.println("[super.getanger==11:] : "+super.getAnger());
-						fight(super.getAnger());
-					} else if (canMove && node.getHeuristic(p) < 5) {
-						System.out.println("Neural Network Training within Range");
-						fightNn(this.p.getPlayerHealth(), super.getAnger(), 1);
+					if (node.getHeuristic(this.player) == 1) {
+						System.out.println("Spider has caught the player !");
+						// start a fight
+						fightFuzzy(fighterDamage);
+					} else if (canMove && node.getHeuristic(player) < 5) {
+						System.out.println("Spider(Neural Net) is withen 10 squares and is now following player canmove");
+						fightNn(this.player.getPlayerHealth(),fighterDamage, 1);
 
 					} else {
+						// Move randomly
 						move();
 					}
 
@@ -138,7 +158,7 @@ public class Fightable extends Sprite implements Runnable {
 	private void followPlayer() {
 		// TODO Auto-generated method stub
 		if (nextPosition != null) {
-			synchronized (executor) {
+			synchronized (this.lockThread) {
 				// Figure out all the nodes around
 				Node[] surroundingNodes = node.adjacentNodes(maze);
 				// List of empty surrounding nodes
@@ -192,7 +212,7 @@ public class Fightable extends Sprite implements Runnable {
 	 */
 	public void move() {
 
-		synchronized (executor) {
+		synchronized (this.lockThread) {
 			// Figure out all the nodes around
 			Node[] surroundingNodes = node.adjacentNodes(maze);
 			// List of empty surrounding nodes
@@ -222,8 +242,8 @@ public class Fightable extends Sprite implements Runnable {
 				lastNode = new Node(previousPositonX, previousPositionY, -1);
 				maze[newPositionX][newPositionY] = node;
 				maze[previousPositonX][previousPositionY] = lastNode;
-				
-			}else {
+
+			} else {
 				// stop getting stuck ye cunts
 				int newPositionX, newPositionY;
 				// Previous position of the object
@@ -241,20 +261,28 @@ public class Fightable extends Sprite implements Runnable {
 
 	}
 
-	public void fight(int attack) {
-
-		Fight f = new Fight();
-
-		double health = p.getPlayerHealth();
-		double newHealth = f.PlayerHealth(50, attack);
-		double hello = health - newHealth;
-		System.out.println(hello);
-		p.setPlayerHealth(hello);
-		System.out.println(p.getPlayerHealth());
+	/**
+	 * Start a fuzzy fight.
+	 * 
+	 * 
+	 * @param spiderPower the power ovger the spiders attack.
+	 */
+	public void fightFuzzy(int spiderPower) {
+		FuzzyFight fuzzyFight = new FuzzyFight();
 		
+		// Carry out a fuzzy attack.
+		double damageToGive = fuzzyFight.getPlayerDamage(player.getWeapon().getDamage(), spiderPower);
+		
+		// Remove attack damage from players health.
+		player.setPlayerHealth(player.getPlayerHealth() - damageToGive);
+
+		//System.out.println("Fuzzy fight damage" + Math.round(damageToGive) + "player health now :" + Math.round(player.getPlayerHealth()));
+		Utils.displayWarningInfo("You just lost "+ Math.round(damageToGive) +"health in that battle !", "Youve been attacked");
+		
+		this.keepThreadAlive=false;
 		// shut her down
-		if (p.getPlayerHealth()<0)
-		{
+		if (player.getPlayerHealth() < 0) {
+			Utils.displayWarningInfo("Game Over your Health reached 0 !", "GameOver");
 			System.exit(0);
 		}
 	}
@@ -270,6 +298,8 @@ public class Fightable extends Sprite implements Runnable {
 	}
 
 	public void fightNn(double health, double angerLevel, double weapon) {
+		System.out.println("In fighnnt meythod in fightable");
+
 // NORMAILIZE VALUES++=========================
 		if (health < 30) {
 			health = 0;
@@ -316,6 +346,7 @@ public class Fightable extends Sprite implements Runnable {
 				move();
 		} catch (Exception e) {
 		}
+		
 	}
 
 }

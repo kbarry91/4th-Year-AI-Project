@@ -1,6 +1,6 @@
 The  maze  should  be  patrolled  by enemies  (spidersare  already  provided) or  other characters  that are  fullythreaded
 * Fuzzy Logic
-
+Fuzzy inference system 
 	1.Linguistic variablesand Universe of Discourse
 	2.Fuzzy Setsand Membership Functions	
 	3.Defuzzifiers, e.g. COG, COGS, LM, MM, RM.

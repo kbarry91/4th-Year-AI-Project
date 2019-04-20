@@ -72,7 +72,7 @@ public class GameRunner implements KeyListener {
 		view.setMinimumSize(d);
 		view.setMaximumSize(d);
 
-		JFrame f = new JFrame("GMIT - B.Sc. in Computing (Software Development)");
+		JFrame f = new JFrame("Kevin Barry - B.Sc. in Computing (Software Development)");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.addKeyListener(this);
 		f.getContentPane().setLayout(new FlowLayout());

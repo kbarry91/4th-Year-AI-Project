@@ -2,13 +2,23 @@ package ie.gmit.sw.ai;
 
 import javax.imageio.*;
 import java.awt.image.*;
-
+/**
+ * Sprite class is the main class for a sprite object.
+ * 
+ * @author Kevin Barry - Bachelor of Science (Honours) in Software Development
+ *
+ */
 public class Sprite {
-	private String name; //The name of this sprite
-	private BufferedImage[][] images; //The set of image frames to animate
- 	private int index = 0; //Initial starting direction that the sprite is facing
- 	private int frame = 0; //Initial starting index of the image 
- 	private int anger;
+	// SPrite name.
+	private String name; 
+	// Images to animate.
+	private BufferedImage[][] images;
+	// Direction sprite is facing
+ 	private int index = 0; 
+ 	// Index of image
+ 	private int frame = 0; 
+ 	// The damage value for sprite.
+ 	private int damage;
 	
  	
 
@@ -16,16 +26,28 @@ public class Sprite {
  		
  	}
  	
-	public Sprite(int anger, String name, int frames, String... files) throws Exception{
+	/**
+	 * Constructor to create sprite.
+	 * 
+	 * @param anger
+	 * @param name
+	 * @param frames
+	 * @param files
+	 * @throws Exception
+	 */
+	public Sprite(int damage, String name, int frames, String... files) throws Exception{
 		this.name = name;
-		this.index = 0; //Initialise the starting index to zero
-		this.images = new BufferedImage[files.length / frames][frames]; //Initialise the image frames
+		this.damage= damage;
+		// Set the starting index to 0.
+		this.index = 0; 
+		// Set the image frames.
+		this.images = new BufferedImage[files.length / frames][frames]; 
 		
-		//Read the varargs list of images into a 2D array
 		int row = 0;
 		int col = 0;
 		for (int i = 0; i < files.length; i++){
-			images[row][col] = ImageIO.read(new java.io.File(files[i])); //Read in each image as a BufferedImage
+			// Read the file in as a bufferedImage and add to array.
+			images[row][col] = ImageIO.read(new java.io.File(files[i]));
 
 			col++;
 			if (col % frames == 0){
@@ -35,9 +57,10 @@ public class Sprite {
 		}
 	}
 	
+	
 	public BufferedImage getNext(){ //Returns the next image frame
 		frame++;
-		if (frame == images[index].length) frame = 0; //Circle back to the start of the array
+		if (frame == images[index].length) frame = 0; 
 
 		return images[index][frame]; 
 	}
@@ -54,11 +77,11 @@ public class Sprite {
 		return this.name;
 	}
 	
-	public int getAnger() {
-		return anger;
+	public int getDamage() {
+		return damage;
 	}
 
-	public void setAnger(int anger) {
-		this.anger = anger;
+	public void setDamage(int damage) {
+		this.damage = damage;
 	}
 }

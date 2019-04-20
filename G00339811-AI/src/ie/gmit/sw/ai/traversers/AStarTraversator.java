@@ -16,7 +16,7 @@ public class AStarTraversator implements Traversator{
 	
 
 	public void traverse(Node[][] maze, Node node) {
-		System.out.println("Runniung A* travester traverse");
+		//System.out.println("Runniung A* travester traverse");
 		
         long time = System.currentTimeMillis();
     	int visitCount = 0;
