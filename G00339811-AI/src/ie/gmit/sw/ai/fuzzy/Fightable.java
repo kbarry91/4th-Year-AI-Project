@@ -44,12 +44,9 @@ public class Fightable extends Sprite implements Runnable {
 	private boolean canMove;
 	private NeuralNetworkFight nnfight;
 	private int outcome;
-
+	
 	// The damage a spider can inflict
 	private int fighterDamage;
-
-	//
-	// searches
 
 	/**
 	 * Constructor Fightable initialise a spider as a fightable object. A fightable
@@ -259,8 +256,6 @@ public class Fightable extends Sprite implements Runnable {
 				// Move to random surrounding node.
 				int position = random.nextInt(emptySurroundingNodes.size());
 
-				// New position of the object
-				int newPositionX, newPositionY;
 
 				// Previous position of the object
 				int previousPositonX = node.getRow(), previousPositionY = node.getCol();
@@ -407,7 +402,7 @@ public class Fightable extends Sprite implements Runnable {
 				// Can adapt to make spider run away.
 				move();
 			} else {
-				System.out.println("[INFO : Neural Network] The spiders next astion will be move.");
+				System.out.println("[INFO : Neural Network] The spiders next action will be move.");
 				move();
 			}
 		} catch (Exception e) {
