@@ -18,7 +18,12 @@
 <fullyQualifiedTypeName name="java.lang.ExceptionInInitializerError"/>
 <fullyQualifiedTypeName name="ie.gmit.sw.ai.traversers.Traversator"/>
 <fullyQualifiedTypeName name="ie.gmit.sw.ai.traversers.AStarTraversator"/>
-<fullyQualifiedTypeName name="ie.gmit.sw.ai.gui.Utils"/>
 <fullyQualifiedTypeName name="java.lang.System"/>
 <fullyQualifiedTypeName name="java.security.Policy.Parameters"/>
+<fullyQualifiedTypeName name="ie.gmit.sw.ai.traversers.BasicHillClimbingTraversator"/>
+<fullyQualifiedTypeName name="ie.gmit.sw.ai.gui.Utils"/>
+<fullyQualifiedTypeName name="java.lang.Boolean"/>
+<fullyQualifiedTypeName name="antlr.debug.NewLineEvent"/>
+<fullyQualifiedTypeName name="ie.gmit.sw.ai.GameRunner"/>
+<fullyQualifiedTypeName name="java.lang.Object"/>
 </qualifiedTypeNameHistroy>
