@@ -24,7 +24,8 @@ Weapons can be found around the maze to help the player fight back. Health picku
 * Heuristic search (A Star) 
 
 The rationale behind  choosing this heuristic search algorithm is based on the fact that this algorithm is the most efficient for this project.
-By calculating the lowest fCost of reaching the goal node(player) the spiders can traverse through the maze. The fCost is the sum of adding gCost (distance from starting node) with the hCost(Heuristic cost , distance from end node).
+By calculating the lowest fCost of reaching the goal node(player) the spiders can traverse through the maze. 
+The fCost is the sum of adding gCost (distance from starting node) with the hCost(Heuristic cost , distance from end node).
 The algorithm checks for the lowest fCost and is recalculated when a player moves based on the players current position.
 All the spider objects are threaded and having them execute on separate threads to the player they can all search independently while using locks to avoid deadlock. 
 The spiders section lower in this document shows how different spiders are given different actions based on the results of the heuristic  search.
@@ -34,14 +35,14 @@ NOTE: I tried implement other searches but AStar worked best for me. The classes
 
 ===================================================================================================
 
-* Fuzzy Logic Inferance System
+* Fuzzy Logic Inference System
 
 The linguistic variables and sets are defined within the fight.fcl file. 
 The rules are set based on the strength of the players weapon combined with the strength of the opponent(spider) to return the damage done to the players health. Within the game each spider type is given a Strength and a player has a weapon object
 With the use of 3 different weapons strengths and 8 different spider strengths the program has be designed to cover all possible input and output possibilities in the universe of discourse while exercise every rule. 
 All the possible weapons and strength of associated spiders are covered lower in this document.
 
-Linguistic variables and member ship functions
+Linguistic variables and membership functions
 The linguistic variables for the 'weapon'[INPUT] are :
 	- Harmless	(0, 0) (0, 1) (50, 0)
 	- Dangerous	(14, 0) (50, 1) (83, 0)
@@ -83,14 +84,14 @@ The Neural Network returns an array of the possibility of each outcome in which 
 The decision is based on the the players health and the spiders power. To implement this the 'getNextAction()' function in the 'fightable' class normalise the values before feeding them to the neural net.
 
 Players health to Normalised health value:
-	Health < 30						= 0 
+	Health < 30				= 0 
 	Health > 30 AND Health < 60		= 1
-	health > 60						= 2
+	health > 60				= 2
 	
 Spider Damage  to Normalised damage value:
-	spiderPower < 30						= 0 
+	spiderPower < 30			= 0 
 	spiderPower > 30 AND spiderPower < 60	= 1
-	spiderPower > 60						= 2
+	spiderPower > 60			= 2
 
 Output mapped to action:
 	[0,0,0]	->	move randomaly
@@ -117,14 +118,14 @@ Output mapped to action:
 	> Press S Key		- Pop up a player statistic box showing damage and weapon
 	> File reading		- Neural network data is saved in files.
 	> Win condition		- Game is won when player reaches exit sign.
-	> Weapons			- Can be picked up along the game.
+	> Weapons		- Can be picked up along the game.
 	> Threads Synchr	- Thread are designed to avoid deadlock.
 
 
  ===================================================================================================
 
 * Weapons
-
+To pick up a weapon walk into it.
 The weapons and there associated damage values used in this game are:
 	- hands	10
 	- sword	20
@@ -134,6 +135,7 @@ The weapons and there associated damage values used in this game are:
  ===================================================================================================
 
 * Spiders
+After a battle with a spider walking over it kills it and removes it from the game.
 The following is a list of spiders used in the game. 
 The type is how they are referenced in the game.
 Colour is the spiders colour.
@@ -141,12 +143,12 @@ Damage is the attack force of spider.
 Searching spider or Neural Network spider.(if searching number is the distance from goal node before computing action)
 Fight fuzzy is how the spider fights
 
-Type : 6	Colour : Black	Damage : 80 Searches using A* traverse	if less than 10	fights fuzzy
-Type : 7	Colour : Blue 	Damage : 60 Searches using A*			if less than 10	fights fuzzy
+Type : 6	Colour : Black	Damage : 80 	Searches using A* traverse	if less than 10	fights fuzzy
+Type : 7	Colour : Blue 	Damage : 60 	Searches using A*		if less than 10	fights fuzzy
 Type : 8	Colour : Brown	Damage : 40	Uses NN to detemine action	if less than 10	fights fuzzy
 Type : 9	Colour : Green	Damage : 20	Uses NN to detemine action	if less than 10	fights fuzzy
-Type : 10	Colour : Grey	Damage : 10 Uses NN to detemine action					fights fuzzy					
+Type : 10	Colour : Grey	Damage : 10	Uses NN to detemine action	does not fight				
 Type : 11	Colour : Orange	Damage : 60	Uses NN to detemine action	if less than 5	fights fuzzy
-Type : 12	Colour : Red,	Damage : 40 Searches using A*			if less than 10	fights fuzzy
-Type : 13	Colour : Yellow	Damage : 20	Uses NN to detemine action					fights fuzzy
+Type : 12	Colour : Red,	Damage : 40 	Searches using A*		if less than 10	fights fuzzy
+Type : 13	Colour : Yellow	Damage : 20	Uses NN to detemine action	does not fight
 

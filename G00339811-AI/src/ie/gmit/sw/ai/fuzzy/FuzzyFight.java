@@ -23,7 +23,7 @@ public class FuzzyFight {
 		System.out.println("[FuzzyFight]getPlayerDamage() weapon:"+weapon+" Opponent:"+opponent);
 
 		// Load and parse the fuzzy control logic file.
-		FIS fis = FIS.load("resources/fuzzy/samplefuzzy.fcl", true);
+		FIS fis = FIS.load("resources/fuzzy/fight.fcl", true);
 
 		// Set the variable values for the Fuzzy inference system .
 		fis.setVariable("weapon", weapon);

@@ -16,20 +16,7 @@ public class NeuralNetworkFight {
 	private final double[][] data = DataExtractor.extractDataFromFile("resources/neural/trainingData");
 	private final double[][] expected = DataExtractor.extractDataFromFile("resources/neural/expectedData");
 
-	/*
- 	private final double[][] datca = { //Health, Weapon, Anger level
-			{ 2, 0, 0 }, { 2, 0, 0 }, { 2, 0, 1 }, { 2, 0, 1 }, { 2, 1, 0 },
-			{ 2, 1, 0 }, { 2, 1, 2}, { 1, 0, 0 }, { 1, 0, 0 }, { 1, 0, 1 }, { 1, 0, 1 }, 
-			{ 1, 1, 0 }, { 1, 1, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 1 }, 
-			{ 0, 0, 1 }, { 0, 1, 0 }, { 0, 1, 0 },{ 0, 1, 1 },{ 0, 1, 2 } };
 
-	private final double[][] expected = { //Panic, Attack, Hide
-			{ 0.0, 0.0, 1.0}, { 0.0, 0.0, 1.0 }, { 1.0, 0.0, 0.0 }, { 1.0, 0.0, 0.0 }, 
-			{ 0.0, 0.0, 0.0}, { 1.0, 0.0, 0.0},{ 0.0, 1.0, 0.0}, { 0.0, 0.0, 1.0 }, { 0.0, 0.0, 0.0 }, 
-			{ 1.0, 0.0, 0.0}, { 0.0, 0.0, 0.0}, { 0.0, 0.0, 0.0}, { 0.0, 0.0, 0.0 }, 
-			{ 0.0, 0.0, 1.0}, { 0.0, 0.0, 0.0}, { 0.0, 0.0, 0.0}, { 0.0, 1.0, 0.0 }, 
-			{ 0.0, 1.0, 0.0 }, { 0.0, 0.0, 0.0}, { 0.0, 0.0, 1.0}, { 0.0, 0.0, 1.0} };
-	*/
 	private NeuralNetwork neuralNet = null;
 	
 	public NeuralNetworkFight() {
