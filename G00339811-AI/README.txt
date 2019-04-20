@@ -42,12 +42,12 @@ KeyPress S displays player and game statistics such as health and current weapon
 ** Pickups
 
 ** Spiders
-Type : 6	Colour : Black	Damage : 80 Searches using A*
-Type : 7	Colour : Blue 	Damage : 60 Searches using A*
-Type : 8	Colour : Brown	Damage : 40
-Type : 9	Colour : Green	Damage : 20
+Type : 6	Colour : Black	Damage : 80 Searches using A* traverse if less than 10	fights fuzzy
+Type : 7	Colour : Blue 	Damage : 60 Searches using A*			if less than 10	fights fuzzy
+Type : 8	Colour : Brown	Damage : 40								if less than 10	fights fuzzy
+Type : 9	Colour : Green	Damage : 20								if less than 10	fights fuzzy
 Type : 10	Colour : Grey	Damage : 10 
-Type : 11	Colour : Orange	Damage : 60
-Type : 12	Colour : Red,	Damage : 40 Searches using A*
+Type : 11	Colour : Orange	Damage : 60								if less than 5	fights fuzzy
+Type : 12	Colour : Red,	Damage : 40 Searches using A*			if less than 10	fights fuzzy
 Type : 13	Colour : Yellow	Damage : 20
 

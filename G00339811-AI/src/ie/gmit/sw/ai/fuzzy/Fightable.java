@@ -52,22 +52,7 @@ public class Fightable extends Sprite implements Runnable {
 	// searches
 
 	/**
-	 * Constructor Fightable initilise a spider as a fightable objec. A fightable
-	 * runs on its own seperate thread and allows selected spiders to perform
-	 * actions such as, search for player, follow player, use neural network to
-	 * decide to fight or run and calculate fight damage using fuzzy logic.
-	 * 
-	 * @param      row, the row that the fightable is located in the maze.
-	 * @param      col, the row that the fightable is located in the maze.
-	 * @param      spiderType, the type of spider.
-	 * @param lock the lock for the executor
-	 * @param maze the game maze
-	 * @param p    the player
-	 * @param f    the neural netwprl
-	 */
-
-	/**
-	 * Constructor Fightable initilise a spider as a fightable objec. A fightable
+	 * Constructor Fightable initialise a spider as a fightable object. A fightable
 	 * runs on its own seperate thread and allows selected spiders to perform
 	 * actions such as, search for player, follow player, use neural network to
 	 * decide to fight or run and calculate fight damage using fuzzy logic.
@@ -107,13 +92,13 @@ public class Fightable extends Sprite implements Runnable {
 		 * for player node using the A* search algorithim.
 		 */
 		if (spiderType == 6) {
-			System.out.println("Black spider searching for player using AStarTraversator");
+			System.out.println("[INFO : Traverser] Black spider searching for player using AStarTraversator");
 			traverse = new AStarTraversator(this.player);
 		} else if (spiderType == 11) {// nn spider
-			System.out.println("Orange spider searching for player using AStarTraversator");
+			System.out.println("[INFO : Traverser] Orange spider searching for player using AStarTraversator");
 			traverse = new AStarTraversator(this.player);
 		} else if (spiderType == 12) {// nn spider
-			System.out.println("Red spider searching for player using AStarTraversator");
+			System.out.println("[INFO : Traverser] Red spider searching for player using AStarTraversator");
 			traverse = new AStarTraversator(this.player);
 		}
 
@@ -126,26 +111,28 @@ public class Fightable extends Sprite implements Runnable {
 			try {
 				Thread.sleep(1000 * spiderType / 4);
 
-				// 6 = Black Spider - 7 = Blue spider - 8 = Brown Spider - 9 = Greewn spider..
+				// 6 = Black Spider - 7 = Blue spider - 8 = Brown Spider - 9 = Green spider.
 				if (spiderType >= 6 && spiderType <= 9) {
 
-					// 6 is black searching spider
+					// 6 is black searching spider.
 					if (spiderType == 6) {
 						traverse(node.getRow(), node.getCol(), traverse);
 					}
 
-					/// If player is touching spider
+					/// If player is touching spider.
 					if (node.getHeuristic(this.player) == 1) {
 						System.out.println("Spider has caught the player !");
+
 						// start a fight.
 						fightFuzzy(fighterDamage);
 
 					} else if (canMove && node.getHeuristic(this.player) < 10) {
-						System.out.println("Spider(fuzzy) is withen 10 squares and is now following player");
+						System.out.println(
+								"[INFO : Heuristic Search] Spider(fuzzy) is withen 10 squares and is now following player");
 						// follow player.
 						followPlayer();
 					} else {
-						// move randomly
+						// Move randomly.
 						move();
 					}
 
@@ -160,15 +147,14 @@ public class Fightable extends Sprite implements Runnable {
 						// start a fight
 						fightFuzzy(fighterDamage);
 					} else if (canMove && node.getHeuristic(player) < 5) {
-						System.out
-								.println("Spider(Neural Net) is withen 10 squares and is now following player canmove");
+						System.out.println(
+								"[INFO : Heuristic Search] Spider(Neural Net) is withen 5 squares and is now following player canmove");
 						getNextAction(this.player.getPlayerHealth(), fighterDamage, 1);
 
 					} else {
-						// Move randomly
+						// Move randomly.
 						move();
 					}
-
 				}
 
 			} catch (InterruptedException e) {
@@ -178,32 +164,43 @@ public class Fightable extends Sprite implements Runnable {
 		}
 	}
 
-	/// move around
-
+	/**
+	 * followPlayer calculates the next move and checks if a player can move to that
+	 * node position.
+	 */
 	private void followPlayer() {
-		// TODO Auto-generated method stub
+
+		// If next position can be moved to
 		if (nextPosition != null) {
+
+			// Check if threasd is locked.
 			synchronized (this.lockThread) {
-				// Figure out all the nodes around
+
+				// Get the adjacent nodes.
 				Node[] surroundingNodes = node.adjacentNodes(maze);
-				// List of empty surrounding nodes
+
+				// List of empty surrounding nodes.
 				ArrayList<Node> emptySurroundingNodes = new ArrayList<>();
-				// Check if they are empty
+
+				// iterate the surrounding nodes.
 				for (Node n : surroundingNodes) {
+
+					// Check if node is blank.
 					if (n.getType() == -1) {
 						emptySurroundingNodes.add(n);
 					}
 				}
 
-				// Check if they are empty
+				// iterate the empty surrounding nodes.
 				for (Node n : emptySurroundingNodes) {
 					if (nextPosition.equals(n)) {
+
 						// New position of the object
 						int newPositionX, newPositionY;
+
 						// Previous position of the object
 						int previousPositonX = node.getRow(), previousPositionY = node.getCol();
 
-						System.out.println();
 						newPositionX = nextPosition.getRow();
 						newPositionY = nextPosition.getCol();
 
@@ -218,16 +215,17 @@ public class Fightable extends Sprite implements Runnable {
 						return;
 					}
 				}
-				// Move to random in empty
+				// Move to node.
 				move();
 
+				// Set variables for next iteration.
 				nextPosition = null;
 				canMove = false;
 				return;
 			}
 		} else {
+			// Move to node.
 			move();
-
 			canMove = false;
 		}
 	}
@@ -237,48 +235,63 @@ public class Fightable extends Sprite implements Runnable {
 	 */
 	public void move() {
 
+		// Ensure thread is not locked.
 		synchronized (this.lockThread) {
-			// Figure out all the nodes around
+
+			// Get adjacent nodes.
 			Node[] surroundingNodes = node.adjacentNodes(maze);
-			// List of empty surrounding nodes
+
+			// Get empty surrounding nodes.
 			ArrayList<Node> emptySurroundingNodes = new ArrayList<>();
 
-			// Check if they are empty
+			// Iterate surrounding nodes
 			for (Node n : surroundingNodes) {
+
+				// check if its a blank node and not last node.
 				if (n.getType() == -1 && n != lastNode) {
 					emptySurroundingNodes.add(n);
 				}
 			}
-// make some shit to stop player getting stuck
+
+			// Check if there is empty nodes surrounding.
 			if (emptySurroundingNodes.size() > 0) {
 
-				// Move to random surrounding node
+				// Move to random surrounding node.
 				int position = random.nextInt(emptySurroundingNodes.size());
 
 				// New position of the object
 				int newPositionX, newPositionY;
+
 				// Previous position of the object
 				int previousPositonX = node.getRow(), previousPositionY = node.getCol();
-				newPositionX = emptySurroundingNodes.get(position).getRow();// nextPosition.getRow();
-				newPositionY = emptySurroundingNodes.get(position).getCol();// nextPosition.getCol();
-				node.setRow(newPositionX);
-				node.setCol(newPositionY);
 
+				// Set new position for node.
+				node.setRow(emptySurroundingNodes.get(position).getRow());
+				node.setCol(emptySurroundingNodes.get(position).getCol());
+
+				// Set the last node.
 				lastNode = new Node(previousPositonX, previousPositionY, -1);
-				maze[newPositionX][newPositionY] = node;
+
+				// Set node in maze.
+				maze[emptySurroundingNodes.get(position).getRow()][emptySurroundingNodes.get(position).getCol()] = node;
 				maze[previousPositonX][previousPositionY] = lastNode;
 
 			} else {
-				// stop getting stuck ye cunts
+				// Get node Position.
 				int newPositionX, newPositionY;
-				// Previous position of the object
 				int previousPositonX = lastNode.getRow(), previousPositionY = lastNode.getCol();
-				newPositionX = lastNode.getRow();// nextPosition.getRow();
-				newPositionY = lastNode.getCol();// nextPosition.getCol();
+
+				newPositionX = lastNode.getRow();
+				newPositionY = lastNode.getCol();
+
+				// Set the node position.
 				node.setRow(newPositionX);
 				node.setCol(newPositionY);
 
+				// Set the last node.
 				lastNode = new Node(previousPositonX, previousPositionY, -1);
+
+				// Set node in maze.
 				maze[newPositionX][newPositionY] = node;
 				maze[previousPositonX][previousPositionY] = lastNode;
 			}
@@ -340,13 +353,13 @@ public class Fightable extends Sprite implements Runnable {
 	 * getNextActio uses previously trained neural network to determine the action
 	 * of the spider.
 	 * 
-	 * @param health, The players health.
-	 * @param spiderPower, The power of the spider.
+	 * @param        health, The players health.
+	 * @param        spiderPower, The power of the spider.
 	 * @param weapon the players current weapon.
 	 */
 	public void getNextAction(double health, double spiderPower, double weapon) {
-		
-		System.out.println("[INFO : Neural Network] A spider is calculating its next action."+weapon);
+
+		System.out.println("[INFO : Neural Network] A spider is calculating its next action." + weapon);
 
 		// Must Normalise the values before feeding them into the neural network.
 
@@ -399,7 +412,7 @@ public class Fightable extends Sprite implements Runnable {
 			}
 		} catch (Exception e) {
 			// If an exception occurs print it.
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 	}

@@ -7,52 +7,82 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DataExtractor is a utilty class the holds a method to extract data from a
+ * file for the neural network.
+ * 
+ * @author Kevin Barry - Bachelor of Science (Honours) in Software Development
+ */
 public class DataExtractor {
+
 	// Set final values for size of data files being read.
 	public final static int FILE_SIZE = 21;
 	public final static int INPUT_NEURONS = 3;
 
-	
-	public static double[][] extractDataFromFile(String fileName) {
-		
-		FileReader fileReader;
-		fileReader = null;
+	/**
+	 * Extracts data from a file.
+	 * 
+	 * @param filePath, the path to the file where data is stored.
+	 * @return a 2dim array of the data.
+	 */
+	public static double[][] extractDataFromFile(String filePath) {
+
+		// Initialise a 2dim double array of the specified size.
+		double[][] data = new double[FILE_SIZE][INPUT_NEURONS];
+
+		// Set file reading variables.
+		FileReader fileReader = null;
+		;
 		String[] dataTuple;
-		double[][] data;
-		data = new double[FILE_SIZE][INPUT_NEURONS];
+		List<String> lines = new ArrayList<String>();
+		String currentLine = null;
+
+		// Try create a new file reader.
 		try {
-			fileReader = new FileReader(fileName);
+			fileReader = new FileReader(filePath);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+
+		// Set up buffer to read text from input stream.
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
-		List<String> lines = new ArrayList<String>();
-		String line = null;
+
+		// Try add current line to List.
 		try {
-			while ((line = bufferedReader.readLine()) != null) {
-				lines.add(line);
+			while ((currentLine = bufferedReader.readLine()) != null) {
+				lines.add(currentLine);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		// Close the buffer
 		try {
 			bufferedReader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		String[] myLines = lines.toArray(new String[lines.size()]);
+
+		// Convert list to STring array.
+		String[] linesRead = lines.toArray(new String[lines.size()]);
 
 		int i = 0;
-		for (String s : myLines) {
-			dataTuple = myLines[i].split(",");
+
+		// Iterate through linesRead.
+		for (String str : linesRead) {
+			// SPlit the line.
+			dataTuple = str.split(",");
+
+			// Iterate through the line
 			for (int j = 0; j < dataTuple.length; j++) {
 				data[i][j] = Double.parseDouble(dataTuple[j]);
 			}
 			i++;
 
 		}
+		
 		System.out.println("[Neural Net] Data loaded from file");
-System.out.println(data);
+
 		return data;
 	}
 
